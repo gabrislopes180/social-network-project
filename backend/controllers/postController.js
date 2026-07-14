@@ -39,6 +39,7 @@ export const uploadPost = async (req, res) => {
 
     const post = await Posts.create({
       authorId,
+      authorUsername: userFound.username,
       content,
       imageUrl,
     });
@@ -58,20 +59,8 @@ export const uploadPost = async (req, res) => {
 
 export const findPostsByUser = async (req, res) => {
   try {
-    const { username } = req.params;
-    const user = await User.findOne({
-      username,
-    });
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "Usuário não encontrado.",
-      });
-    }
-
     const posts = await Posts.find({
-      authorId: user._id,
+      authorId: req.user.id,
     }).sort({
       createdAt: -1,
     });

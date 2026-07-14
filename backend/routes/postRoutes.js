@@ -7,4 +7,5 @@ import { findPostsByUser, uploadPost } from "../controllers/postController.js";
 export const postRouter = express.Router();
 
 postRouter.post("/:authorId", authTokens, upload.single("image"), uploadPost);
-postRouter.get("/:username", authTokens, findPostsByUser);
+postRouter.get("/me", authTokens, findPostsByUser);
+// GET /users/:username/posts
