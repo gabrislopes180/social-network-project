@@ -6,11 +6,20 @@ interface UpdateCacheProps {
   queryClient: QueryClient
 }
 
+const QUERY_KEY = ["posts"]
+
 export const updatePostCache = ({ newPost, queryClient }: UpdateCacheProps) => {
-  const QUERY_KEY = ["posts"]
   queryClient.setQueryData<IPost[]>(QUERY_KEY, (oldData) => {
     if (!oldData) return
 
     return [newPost, ...oldData]
+  })
+}
+
+export const deltePostFromCache = (id: string, queryClient: QueryClient) => {
+  queryClient.setQueryData<IPost[]>(QUERY_KEY, (oldData) => {
+    if (!oldData) return
+
+    return oldData.filter((post) => post._id !== id)
   })
 }

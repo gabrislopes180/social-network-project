@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Ellipsis, Handshake, MessageCircle } from "lucide-react"
+import { Handshake, MessageCircle } from "lucide-react"
 import { IPost } from "../model/interfaces"
 import { AvatarProfile } from "@/components/profile-avatar"
 import { PostOptionsModal } from "./post-options-modal"
@@ -21,7 +21,7 @@ export default function MyPostsList({ posts }: MyPostListProps) {
               <AvatarProfile />
               <span>{post.authorUsername}</span>
             </div>
-            <PostOptionsModal />
+            <PostOptionsModal post={post} />
           </CardHeader>
           <CardContent>
             <Image

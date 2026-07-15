@@ -1,5 +1,6 @@
 import { GetUserByUsername } from "@/entities/users/api/get-user-by-username"
 import UserFound from "@/entities/users/ui/userFound"
+import UserPosts from "@/widgets/userPosts"
 import {
   dehydrate,
   HydrationBoundary,
@@ -27,6 +28,7 @@ export default async function User({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <UserFound name={username} />
+      <UserPosts name={username} />
     </HydrationBoundary>
   )
 }

@@ -9,8 +9,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { IPost } from "../model/interfaces"
+import { useDeletePost } from "@/features/posts/delete-post/model/use-delete-post"
 
-export function PostOptionsModal() {
+export function PostOptionsModal({ post }: { post: IPost }) {
+  const { mutate: handleDelete, isPending } = useDeletePost(post._id)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -22,7 +25,10 @@ export function PostOptionsModal() {
           Editar
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive">
+        <DropdownMenuItem
+          variant="destructive"
+          onClick={() => handleDelete(post._id)}
+        >
           <Trash />
           Deletar
         </DropdownMenuItem>
