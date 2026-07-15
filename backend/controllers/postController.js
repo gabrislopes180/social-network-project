@@ -9,10 +9,6 @@ export const uploadPost = async (req, res) => {
     const { content } = req.body;
     const file = req.file;
 
-    console.log(req.headers["content-type"]);
-    console.log(req.body);
-    console.log(req.file);
-
     if (!authorId) {
       return res.status(400).json({
         success: false,
@@ -61,7 +57,7 @@ export const uploadPost = async (req, res) => {
   }
 };
 
-export const findPostsByUser = async (req, res) => {
+export const findMyPosts = async (req, res) => {
   try {
     const posts = await Posts.find({
       authorId: req.user.id,
@@ -77,6 +73,79 @@ export const findPostsByUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: `Houve um erro ao listar as publicações: ${err.message}`,
+    });
+  }
+};
+
+export const findPostsByUser = async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuário não encontrado.",
+      });
+    }
+
+    const posts = await Posts.find({
+      authorId: user._id,
+    }).sort({
+      createdAt: -1,
+    });
+
+    return res.status(200).json({
+      success: true,
+      posts,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: `Houve um erro ao listar as publicações: ${err.message}`,
+    });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const userId = req.user.id;
+
+    if (!postId) {
+      return res.status(400).json({
+        success: false,
+        message: "não foi fornecido o id da publicação",
+      });
+    }
+
+    const post = await Posts.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post não encontrado.",
+      });
+    }
+
+    if (post.authorId.toString() !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Você não tem permissão para excluir este post.",
+      });
+    }
+
+    await Posts.findByIdAndDelete(postId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Post excluído com sucesso.",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: `Erro ao excluir o post: ${err.message}`,
     });
   }
 };
