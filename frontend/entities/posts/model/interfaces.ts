@@ -1,6 +1,7 @@
 export interface IPost {
   _id: string
   authorId: string
+  authorUsername: string
   content: string
   imageUrl: string
   likesCount: string

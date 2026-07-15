@@ -7,8 +7,12 @@ export const uploadPost = async (req, res) => {
   try {
     const { authorId } = req.params;
     const { content } = req.body;
-    console.log(req.body);
     const file = req.file;
+
+    console.log(req.headers["content-type"]);
+    console.log(req.body);
+    console.log(req.file);
+
     if (!authorId) {
       return res.status(400).json({
         success: false,
@@ -46,7 +50,7 @@ export const uploadPost = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Seu post foi carregado com sucesso!",
+      message: "Sua publicação foi carregada com sucesso!",
       post,
     });
   } catch (err) {

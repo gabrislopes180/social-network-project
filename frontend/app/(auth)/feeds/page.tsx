@@ -1,11 +1,11 @@
-import { ThemeSwitch } from "@/components/theme-switch"
+import { ConfigModal } from "@/components/config-modal"
 import SearchUser from "@/features/users/search-users"
 
 export default async function Page() {
   return (
     <div className="relative flex w-full flex-col items-center justify-center p-6">
       <article className="absolute top-4 right-4">
-        <ThemeSwitch />
+        <ConfigModal />
       </article>
 
       <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
