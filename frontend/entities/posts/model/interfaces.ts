@@ -9,4 +9,5 @@ export interface IPost {
   createdAt: Date
   updatedAt: Date | null
   deletedAt: Date | null
+  likedByMe: boolean
 }

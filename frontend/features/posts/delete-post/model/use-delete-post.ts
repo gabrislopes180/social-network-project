@@ -2,7 +2,7 @@ import { IResponse } from "@/shared/interfaces"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { DeletePost } from "../api/delete-post"
 import { toast } from "sonner"
-import { deltePostFromCache } from "@/entities/posts/lib/update-post-cache"
+import { deletePostFromCache } from "@/entities/posts/lib/update-post-cache"
 
 export const useDeletePost = (id: string) => {
   const queryClient = useQueryClient()
@@ -16,7 +16,7 @@ export const useDeletePost = (id: string) => {
     },
 
     onSuccess: (data) => {
-      deltePostFromCache(id, queryClient)
+      deletePostFromCache(id, queryClient)
       toast(data.message)
     },
 

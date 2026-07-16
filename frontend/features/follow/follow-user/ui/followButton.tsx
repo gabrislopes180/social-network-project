@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { useFollowUser } from "../model/use-follow-user"
 import { useSessionQuery } from "@/entities/session/model/useSession"
-import { Check } from "lucide-react"
+import { Check, CircleCheck } from "lucide-react"
 import { useUnfollowUser } from "../model/use-unfollow-user"
 
 export default function FollowButton({ id }: { id: string }) {
@@ -21,8 +21,8 @@ export default function FollowButton({ id }: { id: string }) {
   if (user?.following.includes(id)) {
     return (
       <div className="flex flex-col items-center justify-center gap-3">
-        <Button className="w-full" disabled>
-          Seguindo <Check />
+        <Button className="w-full" variant={"outline"} disabled>
+          Seguindo <CircleCheck />
         </Button>
 
         <Button

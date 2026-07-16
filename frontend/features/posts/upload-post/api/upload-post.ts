@@ -7,7 +7,7 @@ export async function uploadPostRequest({
   formData,
 }: UploadPayload): Promise<UploadResponse> {
   try {
-    const res = await api.post(`/posts/${id}`, formData, {
+    const res = await api.post(`/posts/upload`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

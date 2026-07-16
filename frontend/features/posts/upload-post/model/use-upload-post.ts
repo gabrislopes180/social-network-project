@@ -5,7 +5,7 @@ import z from "zod"
 import { uploadPostRequest } from "../api/upload-post"
 import { toast } from "sonner"
 import { useSessionQuery } from "@/entities/session/model/useSession"
-import { updatePostCache } from "@/entities/posts/lib/update-post-cache"
+import { addPostToCache } from "@/entities/posts/lib/update-post-cache"
 import { useQueryClient } from "@tanstack/react-query"
 
 export const useUploadPost = () => {
@@ -63,7 +63,7 @@ export const useUploadPost = () => {
         toast.error(uploadResponse.message)
       }
 
-      updatePostCache({
+      addPostToCache({
         queryClient: QueryClient,
         newPost: uploadResponse.post,
       })

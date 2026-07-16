@@ -12,15 +12,20 @@ import {
 import { IPost } from "../model/interfaces"
 import { useDeletePost } from "@/features/posts/delete-post/model/use-delete-post"
 
-export function PostOptionsModal({ post }: { post: IPost }) {
-  const { mutate: handleDelete, isPending } = useDeletePost(post._id)
+interface OptionsModalProps {
+  post: IPost
+  onUpdate: (id: string) => void
+}
+
+export function PostOptionsModal({ post, onUpdate }: OptionsModalProps) {
+  const { mutate: handleDelete } = useDeletePost(post._id)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Ellipsis size={18} />
+        <Ellipsis size={18} className="cursor-pointer" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onUpdate(post._id)}>
           <Edit />
           Editar
         </DropdownMenuItem>

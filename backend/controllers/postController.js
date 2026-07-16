@@ -1,11 +1,14 @@
 import { Posts } from "../models/Posts.js";
 import { User } from "../models/User.js";
 import { uploadImage } from "../services/cloudinary/upload-image.js";
+import { attachLikedByMe } from "../services/posts/attachLikedByMe.js";
+import { attachLikedByMePost } from "../services/posts/attachLikedByMePost.js";
+
 import fs from "fs/promises";
 
 export const uploadPost = async (req, res) => {
   try {
-    const { authorId } = req.params;
+    const authorId = req.user.id;
     const { content } = req.body;
     const file = req.file;
 
@@ -44,10 +47,12 @@ export const uploadPost = async (req, res) => {
       imageUrl,
     });
 
+    const finalPost = await attachLikedByMePost({ userId: authorId, post });
+
     return res.status(201).json({
       success: true,
       message: "Sua publicação foi carregada com sucesso!",
-      post,
+      post: finalPost,
     });
   } catch (err) {
     res.status(500).json({
@@ -59,15 +64,18 @@ export const uploadPost = async (req, res) => {
 
 export const findMyPosts = async (req, res) => {
   try {
+    const userId = req.user.id;
     const posts = await Posts.find({
       authorId: req.user.id,
     }).sort({
       createdAt: -1,
     });
 
+    const finalPosts = await attachLikedByMe({ userId, posts });
+
     return res.status(200).json({
       success: true,
-      posts,
+      posts: finalPosts,
     });
   } catch (err) {
     return res.status(500).json({
@@ -96,14 +104,67 @@ export const findPostsByUser = async (req, res) => {
       createdAt: -1,
     });
 
+    const finalPosts = await attachLikedByMe({ userId: req.user.id, posts });
+
     return res.status(200).json({
       success: true,
-      posts,
+      posts: finalPosts,
     });
   } catch (err) {
     return res.status(500).json({
       success: false,
       message: `Houve um erro ao listar as publicações: ${err.message}`,
+    });
+  }
+};
+
+export const updatePost = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { postId } = req.params;
+    const { newContent } = req.body;
+
+    if (!newContent) {
+      return res.status(400).json({
+        success: false,
+        message: "Nenhum dado novo enviado",
+      });
+    }
+
+    const post = await Posts.findOneAndUpdate(
+      {
+        _id: postId,
+        authorId: userId,
+      },
+      {
+        content: newContent,
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post não encontrado ou sem permissão.",
+      });
+    }
+    const finalPost = await attachLikedByMePost({
+      userId,
+      post,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Post atualizado com sucesso.",
+      post: finalPost,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Houve um erro ao realizar a edição do conteúdo.",
     });
   }
 };

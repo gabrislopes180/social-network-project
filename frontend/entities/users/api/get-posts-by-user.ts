@@ -6,7 +6,7 @@ interface PostsResponse extends IResponse {
   posts: IPost[]
 }
 
-export async function GetPostsByUser(username: string): Promise<PostsResponse> {
+export async function GetPostsByUser(username: string): Promise<IPost[]> {
   try {
     const res = await api.get(`/posts/user/${username}`)
     return res.data.posts
