@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { LikeRequest } from "../api/like-request"
 import { LikeResponse } from "./interfaces"
 import { updatePostCache } from "@/entities/posts/lib/update-post-cache"
 import { toast } from "sonner"
+import { RemoveLike } from "../api/remove-like"
 
-export const useLikePost = (isFromMe: boolean) => {
+export const useRemoveLike = (isFromMe: boolean) => {
   const queryClient = useQueryClient()
   const { mutate, isPending } = useMutation<LikeResponse, Error, string>({
     mutationFn: (postId) => {
       console.log(postId)
-      return LikeRequest(postId)
+      return RemoveLike(postId)
     },
 
     onSuccess: (data) => {
@@ -23,14 +23,14 @@ export const useLikePost = (isFromMe: boolean) => {
     },
 
     onError: (err) => {
-      toast.error(err.message || "Houve um erro ao curtir essa publicação", {
+      toast.error(err.message || "Houve um erro ao descurtir essa publicação", {
         description: "Tente novamente em alguns instantes",
       })
     },
   })
 
   return {
-    likePost: mutate,
+    handleRemove: mutate,
     isPending,
   }
 }

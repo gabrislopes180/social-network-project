@@ -63,3 +63,64 @@ export const CreateLike = async (req, res) => {
     });
   }
 };
+
+export const deleteLike = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const userId = req.user.id;
+
+    const like = await Like.findOne({
+      userId,
+      postId,
+    });
+
+    if (!like) {
+      return res.status(409).json({
+        success: false,
+        message: "Você ainda não curtiu este post.",
+      });
+    }
+    await Like.deleteOne({
+      userId,
+      postId,
+    });
+
+    const updatedPost = await Posts.findByIdAndUpdate(
+      postId,
+      {
+        $inc: {
+          likesCount: -1,
+        },
+      },
+      {
+        new: true,
+      },
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({
+        success: false,
+        message: "Post não encontrado.",
+      });
+    }
+
+    const finalPost = await attachLikedByMePost({
+      userId,
+      post: updatedPost,
+    });
+
+    console.log(finalPost);
+
+    return res.status(201).json({
+      success: true,
+      message: "Publicação descurtida com sucesso.",
+      post: finalPost,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Houve um erro ao descurtir a publicação",
+      detail: err.message,
+    });
+  }
+};
