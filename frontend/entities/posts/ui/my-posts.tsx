@@ -10,6 +10,7 @@ import Background from "@/components/background"
 import { useState } from "react"
 import UpdatePostModal from "@/features/posts/update-post/ui/update-modal"
 import LikeButton from "@/features/likes/ui/like-button"
+import { CommentsModal } from "@/features/comments/comment-post/ui/comment-modal"
 
 interface MyPostListProps {
   posts: IPost[]
@@ -43,9 +44,7 @@ export default function MyPostsList({ posts }: MyPostListProps) {
           <CardFooter className="flex flex-col items-start">
             <div className="flex items-center gap-3 text-xs">
               <LikeButton post={post} isFromMe={true} />
-              <button>
-                <MessageCircle size={18} />
-              </button>
+              <CommentsModal />
             </div>
             {isUpdating === post._id ? (
               <Background>

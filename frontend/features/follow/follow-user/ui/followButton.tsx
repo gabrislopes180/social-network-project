@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { useFollowUser } from "../model/use-follow-user"
 import { useSessionQuery } from "@/entities/session/model/useSession"
-import { Check, CircleCheck } from "lucide-react"
+import { CircleCheck } from "lucide-react"
 import { useUnfollowUser } from "../model/use-unfollow-user"
 
 export default function FollowButton({ id }: { id: string }) {

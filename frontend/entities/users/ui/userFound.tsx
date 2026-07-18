@@ -1,7 +1,6 @@
 "use client"
 
 import FollowButton from "@/features/follow/follow-user/ui/followButton"
-import { User } from "lucide-react"
 import { GetUserByUsername } from "../api/get-user-by-username"
 import { useQuery } from "@tanstack/react-query"
 import { AvatarProfile } from "@/components/profile-avatar"
