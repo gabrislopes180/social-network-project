@@ -1,8 +1,8 @@
 import { AvatarProfile } from "@/components/profile-avatar"
 import { IComment } from "../model/interfaces"
-import { Trash } from "lucide-react"
 import { useQueryClient } from "@tanstack/react-query"
 import { cn } from "@/lib/utils"
+import DeleteButton from "@/features/comments/delete-comment/ui/delete-button"
 
 export default function PostCommentsList({
   comments,
@@ -39,9 +39,7 @@ export default function PostCommentsList({
                   {comment.commentText}
                 </span>
 
-                {comment.isMyComment && (
-                  <Trash size={14} className="mt-1 shrink-0 text-destructive" />
-                )}
+                {comment.isMyComment && <DeleteButton comment={comment} />}
               </section>
             </div>
           </li>
