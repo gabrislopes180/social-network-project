@@ -10,6 +10,7 @@ import { userRouter } from "./routes/userRoutes.js";
 import { followRouter } from "./routes/followRoutes.js";
 import { postRouter } from "./routes/postRoutes.js";
 import { likesRouter } from "./routes/likeRoutes.js";
+import { commentsRouter } from "./routes/commentsRoutes.js";
 
 const app = express();
 app.use(cookieParser());
@@ -35,6 +36,7 @@ app.use("/users", userRouter);
 app.use("/follows", followRouter);
 app.use("/posts", postRouter);
 app.use("/likes", likesRouter);
+app.use("/comments", commentsRouter);
 
 app.listen(process.env.PORT, () => {
   console.log("Hello Express!");

@@ -2,7 +2,6 @@
 
 import Image from "next/image"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { MessageCircle } from "lucide-react"
 import { IPost } from "../model/interfaces"
 import { AvatarProfile } from "@/components/profile-avatar"
 import { PostOptionsModal } from "./post-options-modal"
@@ -10,7 +9,7 @@ import Background from "@/components/background"
 import { useState } from "react"
 import UpdatePostModal from "@/features/posts/update-post/ui/update-modal"
 import LikeButton from "@/features/likes/ui/like-button"
-import { CommentsModal } from "@/features/comments/comment-post/ui/comment-modal"
+import { PostCommentsWidget } from "@/widgets/postComments"
 
 interface MyPostListProps {
   posts: IPost[]
@@ -44,7 +43,10 @@ export default function MyPostsList({ posts }: MyPostListProps) {
           <CardFooter className="flex flex-col items-start">
             <div className="flex items-center gap-3 text-xs">
               <LikeButton post={post} isFromMe={true} />
-              <CommentsModal />
+              <article className="flex items-center gap-0">
+                <PostCommentsWidget post={post} />
+                {post.commentsCount}
+              </article>
             </div>
             {isUpdating === post._id ? (
               <Background>

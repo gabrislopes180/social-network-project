@@ -2,11 +2,11 @@
 
 import Image from "next/image"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Handshake, MessageCircle } from "lucide-react"
+import { MessageCircle } from "lucide-react"
 import { IPost } from "../model/interfaces"
 import { AvatarProfile } from "@/components/profile-avatar"
-import { PostOptionsModal } from "./post-options-modal"
 import LikeButton from "@/features/likes/ui/like-button"
+import { PostCommentsWidget } from "@/widgets/postComments"
 
 interface MyPostListProps {
   posts: IPost[]
@@ -36,9 +36,7 @@ export default function UserPostList({ posts }: MyPostListProps) {
           <CardFooter className="flex flex-col items-start">
             <div className="flex items-center gap-3 text-xs">
               <LikeButton post={post} isFromMe={false} />
-              <button>
-                <MessageCircle size={18} />
-              </button>
+              <PostCommentsWidget post={post} myComments={true} />
             </div>
             <div className="mt-4 flex items-start gap-3 text-xs">
               <span className="font-medium">{post.authorUsername}</span>

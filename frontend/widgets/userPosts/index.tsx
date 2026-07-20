@@ -6,7 +6,7 @@ import { useUserPostsQuery } from "@/entities/users/model/useUserPostsQuery"
 import { Images } from "lucide-react"
 
 export default function UserPosts({ name }: { name: string }) {
-  const { data, isLoading: isLoadingPosts, error } = useUserPostsQuery(name)
+  const { data, isLoading: isLoadingPosts } = useUserPostsQuery(name)
 
   if (isLoadingPosts || !data)
     return (
