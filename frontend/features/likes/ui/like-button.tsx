@@ -21,7 +21,7 @@ export default function LikeButton({ post, isFromMe }: LikeButtonProps) {
         variant={"outline"}
         disabled={isPending || isRemovingLike}
       >
-        <SpinnerCustom />
+        <SpinnerCustom variant="foreground" />
       </Button>
     )
   }

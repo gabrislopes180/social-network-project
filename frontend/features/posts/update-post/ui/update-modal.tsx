@@ -56,7 +56,7 @@ export default function UpdatePostModal({ post, onClose }: UpdateModalProps) {
               })
             }
           >
-            {isPending ? <SpinnerCustom /> : <ArrowRightIcon />}
+            {isPending ? <SpinnerCustom variant="muted" /> : <ArrowRightIcon />}
           </Button>
         </div>
       </CardContent>

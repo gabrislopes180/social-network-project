@@ -111,7 +111,11 @@ export default function UploadForm({ click }: { click: () => void }) {
         </CardContent>
         <CardFooter className="w-full">
           <Button className="w-full" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? <SpinnerCustom /> : "Compartilhar"}
+            {isSubmitting ? (
+              <SpinnerCustom variant="background" />
+            ) : (
+              "Compartilhar"
+            )}
           </Button>
         </CardFooter>
       </Card>

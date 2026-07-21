@@ -89,57 +89,48 @@ export const getUserByName = async (req, res) => {
   }
 };
 
-export const followUser = async (req, res) => {
+export const updateUser = async (req, res) => {
   try {
-    const loggedInUserId = req.user.id;
-    const { userIdToFollow } = req.params;
+    const userId = req.user.id;
+    const { fullName, username } = req.body;
 
-    // Find the user to follow
-    const userToFollow = await User.findById(userIdToFollow);
-    if (!userToFollow) {
+    console.log("Nome para editar: ", username);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        fullName,
+        username,
+      },
+      { new: true, runValidators: true },
+    ).select("-password");
+
+    if (!updatedUser) {
       return res.status(404).json({
         success: false,
-        message: "Usuário não encontrado.",
+        message: "Usuário não encontrado",
       });
     }
 
-    // Check if the user is already being followed
-    if (loggedInUser.following.includes(userIdToFollow)) {
-      return res.status(400).json({
-        success: false,
-        message: "Você já está seguindo este usuário.",
-      });
-    }
-
-    // Add the user to the following list
-    const follow = await Follows.create({
-      followId: crypto.randomUUID(),
-      followerId: loggedInUserId,
-      followingId: userIdToFollow,
-    });
-
-    loggedInUser.following.push(userIdToFollow);
-    await loggedInUser.save();
-
-    const status = {
-      followedBy: loggedInUserId.following.includes(userIdToFollow),
-      following: true,
-      id: follow._id,
-      followedUser: {
-        _id: userToFollow._id,
-        username: userToFollow.username,
-      },
-    };
+    console.log("Nome editado: ", updateUser.username);
 
     return res.status(200).json({
       success: true,
-      message: `Você começou a seguir ${userToFollow.username}`,
-      status,
+      message: "Seu perfil foi atualizado com sucesso!",
+      user: updatedUser,
     });
-  } catch (error) {
+  } catch (err) {
+    if (err.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "Este nome de usuário já está em uso",
+      });
+    }
+
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Erro ao atualizar usuário",
+      detail: err.message,
     });
   }
 };
