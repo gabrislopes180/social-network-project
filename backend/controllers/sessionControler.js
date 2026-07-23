@@ -5,6 +5,12 @@ import { Comments } from "../models/Comments.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+};
+
 export const signUp = async (req, res) => {
   try {
     const { email, fullName, username, password } = req.body;
@@ -128,16 +134,12 @@ export const login = async (req, res) => {
     );
 
     res.cookie("accessToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      ...cookieOptions,
       maxAge: 1000 * 60 * 15, // 15 min
     });
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      ...cookieOptions,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
     });
 
@@ -209,9 +211,7 @@ export const refreshSession = async (req, res) => {
       );
 
       res.cookie("accessToken", newToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        ...cookieOptions,
         maxAge: 1000 * 60 * 15, // 15 min
       });
 
@@ -232,14 +232,10 @@ export const refreshSession = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     res.clearCookie("accessToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      ...cookieOptions,
     });
     res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      ...cookieOptions,
     });
     res.status(200).json({
       success: true,
@@ -281,15 +277,11 @@ export const deleteUser = async (req, res) => {
 
     //coisas a mais para apagar do banco
     res.clearCookie("accessToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      ...cookieOptions,
     });
 
     res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      ...cookieOptions,
     });
 
     await Posts.deleteMany({ author: userId });

@@ -1,5 +1,11 @@
 import jwt from "jsonwebtoken";
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+};
+
 export const authTokens = (req, res, next) => {
   try {
     const token = req.cookies.accessToken;
@@ -16,7 +22,7 @@ export const authTokens = (req, res, next) => {
     req.user = decoded;
     next();
   } catch {
-    res.clearCookie("accessToken");
+    res.clearCookie("accessToken", cookieOptions);
 
     return res.status(401).json({
       success: false,

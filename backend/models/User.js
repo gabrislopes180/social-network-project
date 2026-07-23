@@ -5,10 +5,10 @@ const UserSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
   username: { type: String, required: true, unique: true, trim: true },
   password: { type: String, required: true },
-  description: { type: String, unique: true },
+  description: { type: String },
   preferences: {
-    color1: { type: String, unique: true },
-    color2: { type: String, unique: true },
+    color1: { type: String },
+    color2: { type: String },
   },
   followers: {
     type: [mongoose.Schema.Types.ObjectId],
