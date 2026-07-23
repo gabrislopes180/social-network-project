@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
+
 import { Textarea } from "@/components/ui/textarea"
 import { IPost } from "@/entities/posts/model/interfaces"
-import { ArrowRightIcon, X } from "lucide-react"
+import { ArrowRightIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useUpdatePost } from "../model/use-update-post"
 import { SpinnerCustom } from "@/components/loading-spinner"
@@ -24,42 +23,33 @@ export default function UpdatePostModal({ post, onClose }: UpdateModalProps) {
     }
   }, [isSuccess, onClose])
   return (
-    <Card className="min-w-75">
-      <X
-        className="absolute top-2 right-2 text-primary/70"
-        size={16}
-        cursor={"pointer"}
-        onClick={onClose}
-      />
-      <CardContent className="flex items-start gap-3 p-3 text-xs">
-        <div className="flex w-full flex-col">
-          <Label className="my-3 font-medium">{post.authorUsername}</Label>
-          <Textarea
-            value={contentValue}
-            onChange={(e) => setContentValue(e.target.value)}
-            className="text-primary/70"
-          />
-          <Button
-            variant="default"
-            size="icon"
-            aria-label="Submit"
-            className="mt-2 flex cursor-pointer self-end"
-            disabled={
-              contentValue === post.content ||
-              contentValue.trim() === "" ||
-              isPending
-            }
-            onClick={() =>
-              updatePost({
-                postId: post._id,
-                newContent: contentValue,
-              })
-            }
-          >
-            {isPending ? <SpinnerCustom variant="muted" /> : <ArrowRightIcon />}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex w-full animate-fade-down items-center animate-duration-200">
+      <div className="relative">
+        <Textarea
+          value={contentValue}
+          onChange={(e) => setContentValue(e.target.value)}
+          className="h-5 min-w-50 text-primary/70"
+        />
+        <Button
+          variant="default"
+          size="icon"
+          aria-label="Submit"
+          className="absolute right-0 bottom-0 mt-2 flex cursor-pointer self-end"
+          disabled={
+            contentValue === post.content ||
+            contentValue.trim() === "" ||
+            isPending
+          }
+          onClick={() =>
+            updatePost({
+              postId: post._id,
+              newContent: contentValue,
+            })
+          }
+        >
+          {isPending ? <SpinnerCustom variant="muted" /> : <ArrowRightIcon />}
+        </Button>
+      </div>
+    </div>
   )
 }

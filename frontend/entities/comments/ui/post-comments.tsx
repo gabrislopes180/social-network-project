@@ -22,14 +22,14 @@ export default function PostCommentsList({
           <li
             key={comment._id}
             className={cn(
-              "flex w-full items-start gap-2",
+              "mb-5 flex w-full items-start gap-2",
               comment._id === newCommentId &&
-                "animate-in duration-200 fade-in slide-in-from-left-4"
+                "animate-fade-right animate-duration-200"
             )}
           >
-            <AvatarProfile />
+            <AvatarProfile className="h-8 w-8" />
 
-            <div className="mt-4 flex w-full flex-col">
+            <div className="flex w-full flex-col">
               <span className="font-medium text-foreground">
                 {comment.userId.username}
               </span>

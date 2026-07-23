@@ -92,15 +92,17 @@ export const getUserByName = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { fullName, username } = req.body;
+    const { fullName, username, description, preferences } = req.body;
 
-    console.log("Nome para editar: ", username);
+    //valdidar se já existe o username antes de enviar
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
         fullName,
         username,
+        description,
+        preferences,
       },
       { new: true, runValidators: true },
     ).select("-password");
@@ -112,7 +114,7 @@ export const updateUser = async (req, res) => {
       });
     }
 
-    console.log("Nome editado: ", updateUser.username);
+    console.log("Descript editada: ", updateUser.description);
 
     return res.status(200).json({
       success: true,

@@ -4,13 +4,21 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
+import { cn } from "@/lib/utils"
 
-export function AvatarProfile() {
+export function AvatarProfile({ 
+  className, 
+  wrapperClassName 
+}: { 
+  className?: string;
+  wrapperClassName?: string;
+}) {
   return (
-    <Avatar className="my-4">
-      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-      <AvatarFallback>CN</AvatarFallback>
-      {/* <AvatarBadge className="bg-green-600 dark:bg-green-800" /> */}
-    </Avatar>
+    <div className={cn("relative z-10 flex justify-center", wrapperClassName)}>
+      <Avatar className={cn("w-10 h-10 shadow-sm", className)}>
+        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" className="object-cover" />
+        <AvatarFallback>CN</AvatarFallback>
+      </Avatar>
+    </div>
   )
 }

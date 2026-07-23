@@ -3,6 +3,11 @@ export interface User {
   email: string
   fullName: string
   username: string
+  description: string
+  preferences: {
+    color1: string
+    color2: string
+  }
   followers: string[]
   following: string[]
   createdAt: string

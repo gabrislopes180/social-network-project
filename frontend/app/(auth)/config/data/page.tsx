@@ -1,5 +1,6 @@
 import { MeRequest } from "@/entities/session/api/me"
 import UpdateUser from "@/features/users/update-user"
+import CoverColorPicker from "@/features/users/cover-color-picker"
 import {
   dehydrate,
   HydrationBoundary,

@@ -37,6 +37,7 @@ export function PostCommentsWidget({ post }: MyPostCommentsListProps) {
           <MessageCircle />
         </Button>
       </DrawerTrigger>
+      {post.commentsCount}
 
       <DrawerContent>
         <DrawerHeader>

@@ -1,9 +1,9 @@
 import { Geist_Mono, Inter } from "next/font/google"
 
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
-import Providers from "@/processes/providers"
+import Providers from "@/config/providers/providers"
+import SidebarLayout from "@/config/layouts/sidebar-layout"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -29,9 +29,9 @@ export default function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider>
-          <Providers>{children}</Providers>
-        </ThemeProvider>
+        <Providers>
+          <SidebarLayout>{children}</SidebarLayout>
+        </Providers>
       </body>
     </html>
   )

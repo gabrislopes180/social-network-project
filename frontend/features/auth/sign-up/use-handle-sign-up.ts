@@ -9,7 +9,7 @@ import { z } from "zod"
 import { signUpRequest } from "@/entities/session/api/sign-up"
 import { SignUpPayload } from "@/entities/session/model/types"
 import { LoginRequest } from "@/entities/session/api/login"
-import { useSessionQuery } from "@/entities/session/model/useSession"
+import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 const signUpSchema = z.object({
@@ -30,7 +30,7 @@ export type SignUpFormValues = z.infer<typeof signUpSchema>
 
 export function useHandleSignUp() {
   const router = useRouter()
-  const { ValidateUserCache } = useSessionQuery()
+  const queryClient = useQueryClient()
   const [error, setError] = useState<string | null>(null)
 
   const form = useForm<SignUpFormValues>({
@@ -58,7 +58,7 @@ export function useHandleSignUp() {
 
       console.log("Sessão criada:", session)
 
-      ValidateUserCache(session.user)
+      queryClient.setQueryData(["session"], session.user)
       toast.success(`Bem-vindo!`)
       router.replace("/")
     } catch {

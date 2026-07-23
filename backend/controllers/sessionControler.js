@@ -13,6 +13,26 @@ export const signUp = async (req, res) => {
       });
     }
 
+    console.log("Recebi os dados:", email);
+
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }],
+    });
+
+    if (existingUser) {
+      if (existingUser.email === email) {
+        return res.status(409).json({
+          success: false,
+          message: "Este e-mail já está em uso.",
+        });
+      }
+
+      return res.status(409).json({
+        success: false,
+        message: "Este nome de usuário já está em uso.",
+      });
+    }
+
     const followers = [];
     const following = [];
 
@@ -20,16 +40,28 @@ export const signUp = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const description = "";
+
+    const preferences = {
+      color1: "#000000",
+      color2: "#333333",
+    };
+
     const user = await new User({
       email,
       fullName,
       username,
       password: hashedPassword,
+      description,
+      preferences,
       followers,
       following,
       createdAt,
     }).save();
-    await user.save();
+
+    if (res.status === 201) {
+      console.log("obteve sucesso: ", user);
+    }
 
     res.status(201).json({
       success: true,
@@ -37,9 +69,21 @@ export const signUp = async (req, res) => {
       user,
     });
   } catch (err) {
-    res.status(400).json({
+    if (err.code === 11000) {
+      const field = Object.keys(err.keyPattern)[0];
+
+      return res.status(409).json({
+        success: false,
+        message:
+          field === "email"
+            ? "Este e-mail já está em uso."
+            : "Este nome de usuário já está em uso.",
+      });
+    }
+
+    res.status(500).json({
       success: false,
-      message: "falha ao criar conta",
+      message: "Houve um erro ao gerar o cadastro",
       error: err.message,
     });
   }
@@ -77,14 +121,27 @@ export const login = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" },
+      { expiresIn: "15m" }, // 15 minutos
+    );
+
+    const refreshToken = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }, // 7 dias
     );
 
     res.cookie("accessToken", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 1000 * 60 * 60, // 1h
+      maxAge: 1000 * 60 * 15, // 15 min
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
     });
 
     res.status(200).json({
@@ -129,9 +186,60 @@ export const findSessionUser = async (req, res) => {
   }
 };
 
+export const refreshSession = async (req, res) => {
+  try {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        success: false,
+        message: "Refresh token ausente.",
+      });
+    }
+
+    jwt.verify(refreshToken, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return res.status(401).json({
+          success: false,
+          message: "Refresh token inválido ou expirado.",
+        });
+      }
+
+      const newToken = jwt.sign(
+        { id: decoded.id, email: decoded.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "15m" },
+      );
+
+      res.cookie("accessToken", newToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 1000 * 60 * 15, // 15 min
+      });
+
+      res.status(200).json({
+        success: true,
+        message: "Sessão renovada",
+      });
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Falha ao renovar sessão",
+      error: err.message,
+    });
+  }
+};
+
 export const logout = async (req, res) => {
   try {
     res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    });
+    res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

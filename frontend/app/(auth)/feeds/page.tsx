@@ -1,17 +1,18 @@
-import SearchUser from "@/features/users/search-users"
+import MyPostsWidget from "@/widgets/myPosts"
 
-export default async function Page() {
+export default function Page() {
   return (
-    <div className="relative flex w-full flex-col items-center justify-center p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="text-2xl font-medium">Minha plataforma social!</h1>
-          <h1 className="text-center tracking-tight text-primary">
-            Feeds Page
-          </h1>
-        </div>
+    <div className="relative flex w-full flex-col items-center p-4 md:p-6 bg-background min-h-screen">
+      <div className="w-full max-w-xl flex flex-col gap-6">
+        <header className="flex flex-col gap-1 items-center justify-center pt-4 pb-2 border-b">
+          <h1 className="text-2xl font-bold tracking-tight">For You</h1>
+          <p className="text-sm text-muted-foreground">Catch up on the latest posts</p>
+        </header>
+
+        <main className="w-full">
+          <MyPostsWidget variant="feed" />
+        </main>
       </div>
-      <SearchUser />
     </div>
   )
 }

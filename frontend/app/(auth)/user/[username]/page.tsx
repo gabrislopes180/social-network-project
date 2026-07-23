@@ -26,9 +26,18 @@ export default async function User({
   })
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <UserFound name={username} />
-      <UserPosts name={username} />
-    </HydrationBoundary>
+    <div className="flex w-full justify-center pb-20">
+      <div className="flex min-h-screen w-full max-w-xl flex-col bg-background">
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <UserFound name={username} />
+
+          <div className="my-4 h-px w-full bg-border" />
+
+          <div className="w-full px-1">
+            <UserPosts name={username} />
+          </div>
+        </HydrationBoundary>
+      </div>
+    </div>
   )
 }

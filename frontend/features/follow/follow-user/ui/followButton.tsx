@@ -6,6 +6,8 @@ import { useSessionQuery } from "@/entities/session/model/useSession"
 import { CircleCheck } from "lucide-react"
 import { useUnfollowUser } from "../model/use-unfollow-user"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useState } from "react"
+import { SpinnerCustom } from "@/components/loading-spinner"
 
 export default function FollowButton({ id }: { id: string }) {
   const { user, isLoading } = useSessionQuery()
@@ -15,29 +17,33 @@ export default function FollowButton({ id }: { id: string }) {
     user!
   )
 
+  const [showUnfollowButton, setShowUnfollowButton] = useState(false)
+
   if (!user || isLoading) {
-    return (
-      <div className="flex flex-col space-y-3">
-        <Skeleton className="h-10 w-35 rounded-lg" />
-        <Skeleton className="h-10 w-35 rounded-lg" />
-      </div>
-    )
+    return <Skeleton className="h-10 w-35 rounded-lg" />
   }
 
   if (user?.following.includes(id)) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3">
-        <Button className="w-full" variant={"outline"} disabled>
+      <div className="relative flex min-w-20 flex-col items-center justify-center gap-3">
+        <Button
+          className="opacity-70"
+          variant={"outline"}
+          onClick={() => setShowUnfollowButton((prev) => !prev)}
+        >
           Seguindo <CircleCheck />
         </Button>
 
-        <Button
-          className="w-full"
-          onClick={() => unfollowMutate(id)}
-          disabled={isUnfollowing}
-        >
-          {isUnfollowing ? "Deixando de seguir..." : "Deixar de Seguir"}
-        </Button>
+        {showUnfollowButton && (
+          <Button
+            className="absolute top-10 w-full"
+            size={"default"}
+            onClick={() => unfollowMutate(id)}
+            disabled={isUnfollowing}
+          >
+            {isUnfollowing ? <SpinnerCustom variant="background" /> : "Deixar"}
+          </Button>
+        )}
       </div>
     )
   }

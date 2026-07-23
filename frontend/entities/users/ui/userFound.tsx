@@ -1,34 +1,47 @@
 "use client"
 
 import FollowButton from "@/features/follow/follow-user/ui/followButton"
-import { GetUserByUsername } from "../api/get-user-by-username"
-import { useQuery } from "@tanstack/react-query"
 import { AvatarProfile } from "@/components/profile-avatar"
+import { UserProfileHeader } from "@/components/ui/user-profile-header"
+import { Button } from "@/components/ui/button"
+import { Mail } from "lucide-react"
+import { useGetUserByUsername } from "../model/useGetUserByUsernameQuery"
+import { ProfileCover } from "@/components/profile-cover"
+import { HeaderSkeleton } from "@/components/skeletons/profile-header-skeleton"
 
 export default function UserFound({ name }: { name: string }) {
-  const { data: res, isLoading } = useQuery({
-    queryKey: ["user-found", name],
-    queryFn: () =>
-      GetUserByUsername({
-        username: name,
-        isFromClient: true,
-      }),
-  })
+  const { res, isLoading } = useGetUserByUsername(name)
 
-  if (isLoading || !res) return <>Carregando usuario...</>
+  if (!res || isLoading) {
+    return <HeaderSkeleton />
+  }
 
   return (
-    <div className="mx-auto flex w-60 flex-col items-center justify-center">
-      <AvatarProfile />
-      <p className="tracking-tight text-muted-foreground">
-        @{res.user.username}
-      </p>
-      <span className="my-2 text-sm">
-        Seguidores: {res.user.followers.length} Seguindo:
-        {res.user.following.length}
-      </span>
+    <div className="w-full">
+      <div className="relative w-full">
+        <ProfileCover userFound={res.user} name={name} />
+        <AvatarProfile
+          className="h-24 w-24 border-4 border-background shadow-md md:h-32 md:w-32"
+          wrapperClassName="-mt-12 md:-mt-16"
+        />
+      </div>
 
-      <FollowButton id={res.user._id} />
+      <UserProfileHeader
+        user={res.user}
+        actions={
+          <>
+            <FollowButton id={res.user._id} />
+            <Button
+              variant="secondary"
+              disabled
+              // className="rounded-full px-8 shadow-none"
+            >
+              <Mail />
+              Convidar
+            </Button>
+          </>
+        }
+      />
     </div>
   )
 }

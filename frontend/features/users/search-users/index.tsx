@@ -32,7 +32,7 @@ export default function SearchUser() {
   }, [search])
 
   return (
-    <div className="md:w-100">
+    <div className="w-full px-4">
       <Input
         placeholder="Procurar usuário"
         value={search}

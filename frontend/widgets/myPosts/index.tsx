@@ -1,28 +1,28 @@
 "use client"
 
-import { Skeleton } from "@/components/ui/skeleton"
+import { SpinnerCustom } from "@/components/loading-spinner"
 import { usePostsQuery } from "@/entities/posts/model/use-posts-query"
 import MyPostsList from "@/entities/posts/ui/my-posts"
 import { Images } from "lucide-react"
 
-export default function MyPostsWidget() {
+export default function MyPostsWidget({
+  variant = "feed",
+}: {
+  variant?: "feed" | "grid"
+}) {
   const { posts, isLoading } = usePostsQuery()
 
   if (isLoading) {
     return (
-      <Skeleton className="mt-24 flex h-120 w-85 flex-col items-center justify-center rounded-lg">
-        <div className="w-75">
-          <div className="mb-4 h-7 w-7 items-start self-start rounded-full bg-primary/10"></div>
-          <div className="h-90 w-full rounded-lg bg-primary/10"></div>
-          <div className="mt-4 mb-4 h-2 w-24 items-start self-start rounded-full bg-primary/10"></div>
-        </div>
-      </Skeleton>
+      <div className="mt-20 flex flex-col items-center">
+        <SpinnerCustom />
+      </div>
     )
   }
 
   if (!posts) return
 
-  if (posts?.length < 1)
+  if (posts.length < 1)
     return (
       <div className="my-8 flex flex-col items-center text-xs text-primary/50">
         <Images />
@@ -33,5 +33,5 @@ export default function MyPostsWidget() {
       </div>
     )
 
-  return <MyPostsList posts={posts} />
+  return <MyPostsList posts={posts} variant={variant} />
 }

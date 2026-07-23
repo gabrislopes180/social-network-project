@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { LoginRequest } from "@/entities/session/api/login"
-import { useSessionQuery } from "@/entities/session/model/useSession"
+import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 const loginSchema = z.object({
@@ -19,7 +19,7 @@ export type LoginFormValues = z.infer<typeof loginSchema>
 
 export function useHandleLogin() {
   const router = useRouter()
-  const { ValidateUserCache } = useSessionQuery()
+  const queryClient = useQueryClient()
   const [error, setError] = useState<string | null>(null)
 
   const form = useForm<LoginFormValues>({
@@ -41,7 +41,7 @@ export function useHandleLogin() {
         return
       }
 
-      ValidateUserCache(loginResponse.user)
+      queryClient.setQueryData(["session"], loginResponse.user)
 
       console.log(loginResponse.message)
       toast.success(loginResponse.message)

@@ -14,7 +14,7 @@ export default function UsersFoundList({ users }: Props) {
             <span className="text-xs">{user.username}</span>
 
             <Link href={`/user/${user.username}`} className="ml-2">
-              <Button size="xs">View</Button>
+              <Button size="xs">Olhar</Button>
             </Link>
           </div>
         </div>

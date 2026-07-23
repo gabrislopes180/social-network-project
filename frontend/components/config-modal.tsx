@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ThemeSwitch } from "./theme-switch"
 import LogoutVariantButton from "@/features/auth/logout/ui/logoutVariantButton"
+import Link from "next/link"
 
 export function ConfigModal() {
   return (
@@ -28,8 +29,10 @@ export function ConfigModal() {
           Tema
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <SettingsIcon />
-          Config.
+          <Link href={"/config"}>
+            <SettingsIcon />
+            Config.
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive">

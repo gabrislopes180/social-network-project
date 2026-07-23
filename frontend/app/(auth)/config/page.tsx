@@ -19,7 +19,7 @@ export default function Config() {
       id: 3,
       title: "Zona de Perigo",
       icon: CircleAlert,
-      href: "/config/danger",
+      href: "/config/danger-zone",
     },
   ]
   return (

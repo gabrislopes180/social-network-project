@@ -14,10 +14,10 @@ import { useDeletePost } from "@/features/posts/delete-post/model/use-delete-pos
 
 interface OptionsModalProps {
   post: IPost
-  onUpdate: (id: string) => void
+  onSelectUpdate: () => void
 }
 
-export function PostOptionsModal({ post, onUpdate }: OptionsModalProps) {
+export function PostOptionsModal({ post, onSelectUpdate }: OptionsModalProps) {
   const { mutate: handleDelete } = useDeletePost(post._id)
   return (
     <DropdownMenu>
@@ -25,7 +25,7 @@ export function PostOptionsModal({ post, onUpdate }: OptionsModalProps) {
         <Ellipsis size={18} className="cursor-pointer" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem onClick={() => onUpdate(post._id)}>
+        <DropdownMenuItem onClick={onSelectUpdate}>
           <Edit />
           Editar
         </DropdownMenuItem>
