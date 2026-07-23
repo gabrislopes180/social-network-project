@@ -61,9 +61,6 @@ api.interceptors.response.use(
           .catch((err) => {
             processQueue(err, null)
             reject(err)
-            if (typeof window !== "undefined") {
-              window.location.href = "/"
-            }
           })
           .finally(() => {
             isRefreshing = false

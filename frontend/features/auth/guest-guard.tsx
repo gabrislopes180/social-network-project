@@ -1,7 +1,6 @@
 "use client"
 
 import { SpinnerCustom } from "@/components/loading-spinner"
-import { Spinner } from "@/components/ui/spinner"
 import { useSessionQuery } from "@/entities/session/model/useSession"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
