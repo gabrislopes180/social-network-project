@@ -19,11 +19,14 @@ export default function FollowButton({ id }: { id: string }) {
 
   const [showUnfollowButton, setShowUnfollowButton] = useState(false)
 
+  const followsMe = user?.followers.includes(id)
+  const followingUser = user?.following.includes(id)
+
   if (!user || isLoading) {
     return <Skeleton className="h-10 w-35 rounded-lg" />
   }
 
-  if (user?.following.includes(id)) {
+  if (followingUser) {
     return (
       <div className="relative flex min-w-20 flex-col items-center justify-center gap-3">
         <Button
@@ -47,10 +50,21 @@ export default function FollowButton({ id }: { id: string }) {
       </div>
     )
   }
+  if (followsMe && !followingUser) {
+    return (
+      <Button
+        className="w-full"
+        onClick={() => mutate(id)}
+        disabled={isPending}
+      >
+        {isPending ? <SpinnerCustom variant="background" /> : "Seguir De volta"}
+      </Button>
+    )
+  }
 
   return (
     <Button className="w-full" onClick={() => mutate(id)} disabled={isPending}>
-      {isPending ? "Seguindo..." : "Seguir"}
+      {isPending ? <SpinnerCustom variant="background" /> : "Seguir"}
     </Button>
   )
 }
