@@ -1,4 +1,7 @@
 import { User } from "../models/User.js";
+import { Posts } from "../models/Posts.js";
+import { Like } from "../models/Likes.js";
+import { Comments } from "../models/Comments.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -12,8 +15,6 @@ export const signUp = async (req, res) => {
         message: "Por favor, preencha todos os campos obrigatórios.",
       });
     }
-
-    console.log("Recebi os dados:", email);
 
     const existingUser = await User.findOne({
       $or: [{ email }, { username }],
@@ -58,10 +59,6 @@ export const signUp = async (req, res) => {
       following,
       createdAt,
     }).save();
-
-    if (res.status === 201) {
-      console.log("obteve sucesso: ", user);
-    }
 
     res.status(201).json({
       success: true,
@@ -253,6 +250,73 @@ export const logout = async (req, res) => {
       success: false,
       message: "Falha ao fazer logout",
       error: err.message,
+    });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { email } = req.body;
+
+    if (email.toLowerCase() !== req.user.email.toLowerCase()) {
+      console.log("Email da requisiçao: ", email.toLowerCase());
+      console.log("Email do user : ", req.user.email.toLowerCase());
+
+      return res.status(422).json({
+        success: false,
+        message: "O e-mail informado não corresponde ao da sua conta.",
+      });
+    }
+
+    const userToDelete = await User.findByIdAndDelete(userId);
+
+    if (!userToDelete) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuário não encontrado",
+      });
+    }
+
+    //coisas a mais para apagar do banco
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    });
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    });
+
+    await Posts.deleteMany({ authorId: userId });
+
+    await Comments.deleteMany({ userId });
+
+    await Like.deleteMany({ userId });
+
+    await User.updateMany(
+      {},
+      {
+        $pull: {
+          followers: userId,
+          following: userId,
+        },
+      },
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Conta deletada com sucesso!",
+    });
+  } catch (err) {
+    return res.json({
+      success: false,
+      message: "Houve um erro ao deletar a conta",
+      detail: err.message,
     });
   }
 };

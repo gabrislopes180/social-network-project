@@ -19,7 +19,7 @@ export default function MyPostsList({ posts }: MyPostListProps) {
               src={post.imageUrl}
               fill
               alt="Post image"
-              className="object-cover transition-transform group-hover:scale-105"
+              className="rounded-lg object-cover transition-transform group-hover:scale-105"
             />
           </div>
         </PostDialog>

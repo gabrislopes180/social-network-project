@@ -35,6 +35,7 @@ export default function SearchUser() {
     <div className="w-full px-4">
       <Input
         placeholder="Procurar usuário"
+        className="text-sm placeholder:text-sm"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />

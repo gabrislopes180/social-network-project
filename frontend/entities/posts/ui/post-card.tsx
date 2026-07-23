@@ -24,7 +24,7 @@ export function PostDialog({
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <DialogContent className="max-w-90 border-none bg-transparent p-0 shadow-none">
+      <DialogContent className="max-h-140 max-w-90 overflow-auto border-none bg-transparent p-0 shadow-none">
         <Card className="border-none shadow-none">
           <CardHeader className="flex items-center justify-between gap-2 pt-3">
             <div className="flex items-center gap-2">
@@ -56,7 +56,7 @@ export function PostDialog({
               <PostCommentsWidget post={post} />
             </div>
           </CardContent>
-          <CardFooter className="flex items-center gap-1 px-5">
+          <CardFooter className="flex items-start gap-2 px-5">
             <span className="font-semibold">{post.authorUsername}</span>
             {isUpdating ? (
               <UpdatePostModal
@@ -64,7 +64,9 @@ export function PostDialog({
                 onClose={() => setIsUpdating(false)}
               />
             ) : (
-              <span>{post.content}</span>
+              <span className="mt-0.5 max-w-9/10 text-xs text-foreground/80">
+                {post.content}
+              </span>
             )}
           </CardFooter>
         </Card>

@@ -15,19 +15,28 @@ interface MyPostListProps {
   variant?: "feed" | "grid"
 }
 
-export default function UserPostList({ posts, variant = "feed" }: MyPostListProps) {
+export default function UserPostList({
+  posts,
+  variant = "feed",
+}: MyPostListProps) {
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null)
 
   const renderPostCard = (post: IPost) => (
-    <Card key={post._id} className="w-full max-w-[400px] border-none shadow-none md:border md:shadow-sm scale-95 p-3 mx-auto">
+    <Card
+      key={post._id}
+      className="mx-auto w-full max-w-[400px] scale-95 border-none p-3 shadow-none md:border md:shadow-sm"
+    >
       <CardHeader className="flex items-center justify-between gap-2 pt-3">
         <div className="flex items-center gap-2">
-          <AvatarProfile className="w-8 h-8 border-none" wrapperClassName="mt-0" />
-          <span className="font-semibold text-sm">{post.authorUsername}</span>
+          <AvatarProfile
+            className="h-8 w-8 border-none"
+            wrapperClassName="mt-0"
+          />
+          <span className="text-sm font-semibold">{post.authorUsername}</span>
         </div>
       </CardHeader>
       <CardContent className="px-2">
-        <div className="relative aspect-square w-full rounded-md overflow-hidden bg-muted">
+        <div className="relative aspect-square w-full overflow-hidden rounded-md bg-muted">
           <Image
             src={post.imageUrl}
             fill
@@ -37,9 +46,9 @@ export default function UserPostList({ posts, variant = "feed" }: MyPostListProp
         </div>
       </CardContent>
       <CardFooter className="flex flex-col items-start px-3 pb-3">
-        <div className="flex items-center gap-3 text-xs w-full">
+        <div className="flex w-full items-center gap-3 text-xs">
           <LikeButton post={post} isFromMe={false} />
-          <PostCommentsWidget post={post} myComments={true} />
+          <PostCommentsWidget post={post} />
         </div>
         <div className="mt-4 flex items-start gap-2 text-sm">
           <span className="font-semibold">{post.authorUsername}</span>
@@ -54,22 +63,25 @@ export default function UserPostList({ posts, variant = "feed" }: MyPostListProp
       <>
         <div className="grid grid-cols-3 gap-1">
           {posts.map((post) => (
-            <div 
-              key={post._id} 
+            <div
+              key={post._id}
               onClick={() => setSelectedPost(post)}
-              className="relative aspect-square overflow-hidden cursor-pointer group"
+              className="group relative aspect-square cursor-pointer overflow-hidden"
             >
               <Image
                 src={post.imageUrl}
                 fill
                 alt="Post image"
-                className="object-cover group-hover:scale-105 transition-transform"
+                className="object-cover transition-transform group-hover:scale-105"
               />
             </div>
           ))}
         </div>
-        
-        <PostModal isOpen={!!selectedPost} onClose={() => setSelectedPost(null)}>
+
+        <PostModal
+          isOpen={!!selectedPost}
+          onClose={() => setSelectedPost(null)}
+        >
           {selectedPost && renderPostCard(selectedPost)}
         </PostModal>
       </>
@@ -77,7 +89,7 @@ export default function UserPostList({ posts, variant = "feed" }: MyPostListProp
   }
 
   return (
-    <ul className="my-10 flex flex-col items-center w-full">
+    <ul className="my-10 flex w-full flex-col items-center">
       {posts.map((post) => (
         <li key={post._id} className="w-full">
           {renderPostCard(post)}

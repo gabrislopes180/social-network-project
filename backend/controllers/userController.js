@@ -94,7 +94,18 @@ export const updateUser = async (req, res) => {
     const userId = req.user.id;
     const { fullName, username, description, preferences } = req.body;
 
-    //valdidar se já existe o username antes de enviar
+    const existingUser = await User.findOne({
+      username,
+      //procura um usuario com esse username e de id diferente do id do usuario logado
+      _id: { $ne: userId },
+    });
+
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: "Este nome de usuário já está em uso.",
+      });
+    }
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
@@ -113,8 +124,6 @@ export const updateUser = async (req, res) => {
         message: "Usuário não encontrado",
       });
     }
-
-    console.log("Descript editada: ", updateUser.description);
 
     return res.status(200).json({
       success: true,

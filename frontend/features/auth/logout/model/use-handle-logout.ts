@@ -4,13 +4,13 @@ import { useRouter } from "next/navigation"
 
 export const useHandleLogout = () => {
   const queryClient = useQueryClient()
-  const router = useRouter()
+  const routes = useRouter()
 
   return useMutation({
     mutationFn: async () => logoutRequest(),
     onSuccess: () => {
-      router.replace("/authentication")
       queryClient.setQueryData(["session"], null)
+      routes.replace("/")
     },
 
     onError: (err) => {

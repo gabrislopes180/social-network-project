@@ -9,11 +9,7 @@ export async function signUpRequest(
   try {
     const res = await api.post("/auth/signUp", payload)
     return res.data
-  } catch {
-    return {
-      success: false,
-      message: "Erro ao criar conta",
-      user: null,
-    }
+  } catch (err) {
+    throw Error(err as string)
   }
 }

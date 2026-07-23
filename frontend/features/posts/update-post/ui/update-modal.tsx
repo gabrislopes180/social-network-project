@@ -28,7 +28,7 @@ export default function UpdatePostModal({ post, onClose }: UpdateModalProps) {
         <Textarea
           value={contentValue}
           onChange={(e) => setContentValue(e.target.value)}
-          className="h-5 min-w-50 text-primary/70"
+          className="h-5 w-50 text-xs text-primary/70"
         />
         <Button
           variant="default"

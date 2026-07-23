@@ -59,10 +59,14 @@ export function useHandleSignUp() {
       console.log("Sessão criada:", session)
 
       queryClient.setQueryData(["session"], session.user)
-      toast.success(`Bem-vindo!`)
+      toast.success(`Bem-vindo, ${session.user.fullName}!`, {
+        description: "Clique para prosseguir e personalizar seu perfil",
+        action: { label: "Ir", onClick: () => router.push("/config/data") },
+      })
       router.replace("/")
-    } catch {
-      setError("Nao foi possivel criar sua conta. Tente novamente.")
+    } catch (err: Error) {
+      console.error(err)
+      if (err?.status === 409) setError("Esse nome de usuário já está em uso")
     }
   })
 

@@ -9,6 +9,7 @@ import {
   findSessionUser,
   logout,
   refreshSession,
+  deleteUser,
 } from "../controllers/sessionControler.js";
 
 authRouter.post("/signup", signUp);
@@ -16,3 +17,4 @@ authRouter.post("/login", login);
 authRouter.post("/refresh", refreshSession);
 authRouter.post("/logout", logout);
 authRouter.get("/me", authTokens, findSessionUser);
+authRouter.post("/me/delete", authTokens, deleteUser);

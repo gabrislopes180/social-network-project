@@ -3,6 +3,7 @@ import { AvatarProfile } from "@/components/profile-avatar"
 import UserInfo from "@/components/user-info"
 import MyPostsWidget from "@/widgets/myPosts"
 import { ProfileCover } from "@/components/profile-cover"
+import { Button } from "@/components/ui/button"
 
 export default function Profile() {
   return (
@@ -10,9 +11,13 @@ export default function Profile() {
       <div className="flex min-h-screen w-full max-w-xl flex-col bg-background">
         <div className="relative w-full">
           <ProfileCover />
-          <div className="absolute top-4 right-4 z-20">
+          <Button
+            className="absolute top-4 right-4 z-20"
+            variant={"secondary"}
+            size={"icon-sm"}
+          >
             <ConfigModal />
-          </div>
+          </Button>
           <AvatarProfile className="relative bottom-12 h-30 w-30 border-4 border-background shadow-md md:h-32 md:w-32" />
         </div>
 

@@ -24,7 +24,7 @@ export function UserProfileHeader({ user, actions }: UserProfileHeaderProps) {
           <span className="text-[17px] font-semibold">
             {user.followers?.length || 0}
           </span>
-          <span className="text-[11px] tracking-wider text-muted-foreground uppercase">
+          <span className="text-xs tracking-wider text-muted-foreground">
             Seguidores
           </span>
         </div>
@@ -32,13 +32,13 @@ export function UserProfileHeader({ user, actions }: UserProfileHeaderProps) {
           <span className="text-[17px] font-semibold">
             {user.following?.length || 0}
           </span>
-          <span className="text-[11px] tracking-wider text-muted-foreground uppercase">
+          <span className="text-xs tracking-wider text-muted-foreground">
             Seguindo
           </span>
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-[17px] font-semibold">166</span>
-          <span className="text-[11px] tracking-wider text-muted-foreground uppercase">
+          <span className="text-xs tracking-wider text-muted-foreground">
             Posts
           </span>
         </div>

@@ -36,7 +36,7 @@ export default function FollowButton({ id }: { id: string }) {
 
         {showUnfollowButton && (
           <Button
-            className="absolute top-10 w-full"
+            className="absolute top-10 w-full animate-fade-down animate-duration-50"
             size={"default"}
             onClick={() => unfollowMutate(id)}
             disabled={isUnfollowing}

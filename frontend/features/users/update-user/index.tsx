@@ -8,6 +8,7 @@ import { useEffect } from "react"
 import { useUpdateUser } from "./model/use-update-user"
 import { useValidateChanges } from "./model/use-validate-changes"
 import CoverColorPicker from "../cover-color-picker"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function UpdateUser() {
   const { user, isLoading } = useSessionQuery()
@@ -80,7 +81,7 @@ export default function UpdateUser() {
           Sua Descrição
         </label>
         {isEditing ? (
-          <Input
+          <Textarea
             value={descriptionInput}
             onChange={(e) => setDesriptionInput(e.target.value)}
           />
