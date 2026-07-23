@@ -1,5 +1,3 @@
-"use server"
-
 import { api } from "@/shared/api"
 import { SignUpPayload, SignUpResponse } from "../model/types"
 import { getServerError } from "@/shared/lib/get-server-error"
