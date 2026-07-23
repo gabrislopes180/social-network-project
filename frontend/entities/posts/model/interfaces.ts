@@ -1,11 +1,17 @@
+export interface IPostAuthor {
+  _id: string
+  username: string
+  fullName: string
+  avatar?: string
+}
+
 export interface IPost {
   _id: string
-  authorId: string
-  authorUsername: string
+  author: IPostAuthor
   content: string
   imageUrl: string
-  likesCount: string
-  commentsCount: string
+  likesCount: number
+  commentsCount: number
   createdAt: Date
   updatedAt: Date | null
   deletedAt: Date | null

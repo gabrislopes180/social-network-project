@@ -11,16 +11,15 @@ export default function MyPostsWidget({
   variant?: "feed" | "grid"
 }) {
   const { posts, isLoading } = usePostsQuery()
+  console.log(posts)
 
-  if (isLoading) {
+  if (isLoading || !posts) {
     return (
       <div className="mt-20 flex flex-col items-center">
         <SpinnerCustom />
       </div>
     )
   }
-
-  if (!posts) return
 
   if (posts.length < 1)
     return (

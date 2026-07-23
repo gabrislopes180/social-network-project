@@ -292,7 +292,7 @@ export const deleteUser = async (req, res) => {
       sameSite: "lax",
     });
 
-    await Posts.deleteMany({ authorId: userId });
+    await Posts.deleteMany({ author: userId });
 
     await Comments.deleteMany({ userId });
 

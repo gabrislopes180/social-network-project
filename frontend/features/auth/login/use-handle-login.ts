@@ -8,7 +8,9 @@ import { z } from "zod"
 
 import { LoginRequest } from "@/entities/session/api/login"
 import { useQueryClient } from "@tanstack/react-query"
+import { IServerError } from "@/shared/interfaces"
 import { toast } from "sonner"
+import { showError } from "@/shared/lib/get-server-error"
 
 const loginSchema = z.object({
   email: z.string().trim().email("Digite um email valido"),
@@ -46,8 +48,12 @@ export function useHandleLogin() {
       console.log(loginResponse.message)
       toast.success(loginResponse.message)
       router.replace("/feeds")
-    } catch {
-      setError("Nao foi possivel entrar. Tente novamente.")
+    } catch (err) {
+      const message = showError({
+        err,
+        genericMessage: "Não foi possível entrar. Tente novamente.",
+      })
+      setError(message)
     }
   })
 

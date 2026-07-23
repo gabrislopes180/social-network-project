@@ -8,3 +8,8 @@ export interface IServerError {
   message: string
   detail?: string
 }
+
+export interface ShowErrorParams {
+  err: unknown
+  genericMessage: string
+}

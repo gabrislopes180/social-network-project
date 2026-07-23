@@ -3,6 +3,7 @@ import { LikeResponse } from "./interfaces"
 import { updatePostCache } from "@/entities/posts/lib/update-post-cache"
 import { toast } from "sonner"
 import { RemoveLike } from "../api/remove-like"
+import { showError } from "@/shared/lib/get-server-error"
 
 export const useRemoveLike = (isFromMe: boolean) => {
   const queryClient = useQueryClient()
@@ -23,7 +24,11 @@ export const useRemoveLike = (isFromMe: boolean) => {
     },
 
     onError: (err) => {
-      toast.error(err.message || "Houve um erro ao descurtir essa publicação", {
+      const error = showError({
+        err,
+        genericMessage: "Houve um erro ao descurtir essa publicação",
+      })
+      toast.error(error, {
         description: "Tente novamente em alguns instantes",
       })
     },

@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { SendCommentPayload } from "./interfaces"
 import { toast } from "sonner"
 import { updateCommentCache } from "@/entities/comments/lib/update-comment-cache"
+import { showError } from "@/shared/lib/get-server-error"
 
 export const useSendComment = () => {
   const queryClient = useQueryClient()
@@ -20,12 +21,15 @@ export const useSendComment = () => {
       // Função para atualizar o cache dos comentários
       updateCommentCache({
         comment: data,
-        postId: data.postId,
         queryClient,
       })
     },
     onError: (error) => {
-      toast.error(error.message)
+      const err = showError({
+        err: error,
+        genericMessage: "Houve um erro ao publicar o comentário",
+      })
+      toast.error(err)
     },
   })
   return { sendComment: mutate, isPending, error, isSuccess }

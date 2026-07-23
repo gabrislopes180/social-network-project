@@ -8,12 +8,14 @@ import {
   updatePost,
   deletePost,
   findPostsByUser,
+  getFeed,
 } from "../controllers/postController.js";
 
 export const postRouter = express.Router();
 
 postRouter.post("/upload", authTokens, upload.single("image"), uploadPost);
 postRouter.get("/me", authTokens, findMyPosts);
+postRouter.get("/me/feed", authTokens, getFeed);
 postRouter.get("/user/:username", authTokens, findPostsByUser);
 postRouter.patch("/:postId", authTokens, updatePost);
 postRouter.delete("/:postId", authTokens, deletePost);

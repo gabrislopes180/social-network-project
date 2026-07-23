@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { DeleteCommentResponse, DeleteRequest } from "./interfaces"
 import { deleteCommentCache } from "@/entities/comments/lib/update-comment-cache"
+import { showError } from "@/shared/lib/get-server-error"
 
 export const useDeleteComment = () => {
   const queryClient = useQueryClient()
@@ -17,7 +18,11 @@ export const useDeleteComment = () => {
       })
     },
     onError: (err) => {
-      toast.error(err.message)
+      const error = showError({
+        err,
+        genericMessage: "Houve um erro ao deletar o comentário",
+      })
+      toast.error(error)
     },
   })
 }

@@ -11,6 +11,7 @@ import { SignUpPayload } from "@/entities/session/model/types"
 import { LoginRequest } from "@/entities/session/api/login"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
+import { showError } from "@/shared/lib/get-server-error"
 
 const signUpSchema = z.object({
   email: z.string().trim().email("Digite um email valido"),
@@ -59,14 +60,17 @@ export function useHandleSignUp() {
       console.log("Sessão criada:", session)
 
       queryClient.setQueryData(["session"], session.user)
-      toast.success(`Bem-vindo, ${session.user.fullName}!`, {
+      toast.loading(`Bem-vindo, ${session.user.fullName}!`, {
         description: "Clique para prosseguir e personalizar seu perfil",
         action: { label: "Ir", onClick: () => router.push("/config/data") },
       })
       router.replace("/")
-    } catch (err: Error) {
-      console.error(err)
-      if (err?.status === 409) setError("Esse nome de usuário já está em uso")
+    } catch (err) {
+      const message = showError({
+        err,
+        genericMessage: "Não foi possível realizar o cadastro",
+      })
+      setError(message)
     }
   })
 

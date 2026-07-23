@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { DeletePost } from "../api/delete-post"
 import { toast } from "sonner"
 import { deletePostFromCache } from "@/entities/posts/lib/update-post-cache"
+import { showError } from "@/shared/lib/get-server-error"
 
 export const useDeletePost = (id: string) => {
   const queryClient = useQueryClient()
@@ -21,7 +22,13 @@ export const useDeletePost = (id: string) => {
     },
 
     onError: (err) => {
-      toast.error(err.message)
+      const error = showError({
+        err,
+        genericMessage: "Houve um erro ao excluir a publicação.",
+      })
+      toast.error(error, {
+        description: "Tente novamente em alguns instantes",
+      })
     },
   })
 }

@@ -1,5 +1,6 @@
 import { api } from "@/shared/api"
 import { UploadPayload, UploadResponse } from "../model/interfaces"
+import { getServerError } from "@/shared/lib/get-server-error"
 // import { IServerError } from "@/shared/interfaces"
 
 export async function uploadPostRequest({
@@ -14,6 +15,6 @@ export async function uploadPostRequest({
     })
     return res.data
   } catch (err) {
-    throw Error(err as string)
+    throw getServerError(err)
   }
 }

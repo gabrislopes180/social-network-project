@@ -3,6 +3,7 @@ import { updataUser } from "../api/update-user"
 import { UpdatePayload, UpdateResponse } from "./interfaces"
 import { toast } from "sonner"
 import { User } from "@/entities/session/model/types"
+import { showError } from "@/shared/lib/get-server-error"
 
 export const useUpdateUser = () => {
   const queryClient = useQueryClient()
@@ -14,7 +15,11 @@ export const useUpdateUser = () => {
     },
 
     onError: (err) => {
-      toast.error(err.message)
+      const error = showError({
+        err,
+        genericMessage: "Houve um erro ao atualizar os dados",
+      })
+      toast.error(error)
     },
   })
 }

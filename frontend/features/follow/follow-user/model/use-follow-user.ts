@@ -5,6 +5,7 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { updateFollowCache } from "../../lib/update-follow-cache"
 import { User } from "@/entities/session/model/types"
+import { showError } from "@/shared/lib/get-server-error"
 
 export const useFollowUser = (user: User) => {
   const router = useRouter()
@@ -24,8 +25,11 @@ export const useFollowUser = (user: User) => {
       router.refresh()
     },
     onError: (error) => {
-      console.error("Error following user:", error)
-      toast.error("Erro ao seguir usuário. Tente novamente.")
+      const err = showError({
+        err: error,
+        genericMessage: "Erro ao seguir usuário. Tente novamente.",
+      })
+      toast.error(err)
     },
   })
 }

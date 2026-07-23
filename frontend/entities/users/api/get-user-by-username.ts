@@ -1,5 +1,6 @@
 import { api, apiServer } from "@/shared/api"
 import { User } from "../../session/model/types"
+import { getServerError } from "@/shared/lib/get-server-error"
 
 interface UserResponse {
   success: boolean
@@ -23,6 +24,6 @@ export async function GetUserByUsername({
     const res = await apiServer.get(`/users/${username}`)
     return res.data
   } catch (error) {
-    throw new Error("Falha ao buscar usuário por nome de usuário: " + error)
+    throw getServerError(error)
   }
 }

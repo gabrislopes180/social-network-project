@@ -2,12 +2,11 @@ import mongoose from "mongoose";
 
 const PostSchema = new mongoose.Schema(
   {
-    authorId: {
+    author: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
     },
-    authorUsername: { type: String, required: true },
     content: { type: String, trim: true, default: "", maxlength: 2200 },
     imageUrl: { type: String, default: null, required: true },
     likesCount: { type: Number, default: 0 },

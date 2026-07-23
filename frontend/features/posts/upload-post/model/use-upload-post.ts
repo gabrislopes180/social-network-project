@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import { useSessionQuery } from "@/entities/session/model/useSession"
 import { addPostToCache } from "@/entities/posts/lib/update-post-cache"
 import { useQueryClient } from "@tanstack/react-query"
+import { showError } from "@/shared/lib/get-server-error"
 
 export const useUploadPost = () => {
   const { user } = useSessionQuery()
@@ -72,7 +73,11 @@ export const useUploadPost = () => {
       reset()
     } catch (err) {
       console.error(err)
-      toast.error("Houve um erro ao publicar")
+      const error = showError({
+        err,
+        genericMessage: "Houve um erro ao compartilhar a publicação",
+      })
+      toast.error(error)
     }
   }
 

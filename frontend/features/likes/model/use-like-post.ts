@@ -3,6 +3,7 @@ import { LikeRequest } from "../api/like-request"
 import { LikeResponse } from "./interfaces"
 import { updatePostCache } from "@/entities/posts/lib/update-post-cache"
 import { toast } from "sonner"
+import { showError } from "@/shared/lib/get-server-error"
 
 export const useLikePost = (isFromMe: boolean) => {
   const queryClient = useQueryClient()
@@ -23,7 +24,11 @@ export const useLikePost = (isFromMe: boolean) => {
     },
 
     onError: (err) => {
-      toast.error(err.message || "Houve um erro ao curtir essa publicação", {
+      const error = showError({
+        err,
+        genericMessage: "Houve um erro ao curtir essa publicação",
+      })
+      toast.error(error, {
         description: "Tente novamente em alguns instantes",
       })
     },

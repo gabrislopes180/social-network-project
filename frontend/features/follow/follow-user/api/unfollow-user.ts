@@ -1,5 +1,6 @@
 import { User } from "@/entities/session/model/types"
 import { api } from "@/shared/api"
+import { getServerError } from "@/shared/lib/get-server-error"
 
 export interface unfollowResponse {
   success: boolean
@@ -17,7 +18,6 @@ export async function unfollowUser(
     })
     return res.data
   } catch (error) {
-    console.error("Error following user:", error)
-    throw error
+    throw getServerError(error)
   }
 }

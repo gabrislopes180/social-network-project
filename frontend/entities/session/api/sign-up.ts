@@ -2,6 +2,7 @@
 
 import { api } from "@/shared/api"
 import { SignUpPayload, SignUpResponse } from "../model/types"
+import { getServerError } from "@/shared/lib/get-server-error"
 
 export async function signUpRequest(
   payload: SignUpPayload
@@ -10,6 +11,6 @@ export async function signUpRequest(
     const res = await api.post("/auth/signUp", payload)
     return res.data
   } catch (err) {
-    throw Error(err as string)
+    throw getServerError(err)
   }
 }

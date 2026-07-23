@@ -1,4 +1,5 @@
 import { api } from "@/shared/api"
+import { getServerError } from "@/shared/lib/get-server-error"
 
 interface Response {
   success: boolean
@@ -10,7 +11,6 @@ export async function logoutRequest(): Promise<Response> {
     const res = await api.post("/auth/logout")
     return res.data
   } catch (error) {
-    console.error("Error logging out:", error)
-    throw error
+    throw getServerError(error)
   }
 }

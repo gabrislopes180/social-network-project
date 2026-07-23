@@ -1,5 +1,6 @@
 import { api } from "@/shared/api"
 import { FollowResponse } from "../model/types"
+import { getServerError } from "@/shared/lib/get-server-error"
 
 export async function followUser(
   userIdToFollow: string,
@@ -11,7 +12,6 @@ export async function followUser(
     })
     return res.data
   } catch (error) {
-    console.error("Error following user:", error)
-    throw error
+    throw getServerError(error)
   }
 }

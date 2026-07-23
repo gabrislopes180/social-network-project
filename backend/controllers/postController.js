@@ -41,8 +41,7 @@ export const uploadPost = async (req, res) => {
     await fs.unlink(file.path);
 
     const post = await Posts.create({
-      authorId,
-      authorUsername: userFound.username,
+      author: authorId,
       content,
       imageUrl,
     });
@@ -66,10 +65,12 @@ export const findMyPosts = async (req, res) => {
   try {
     const userId = req.user.id;
     const posts = await Posts.find({
-      authorId: req.user.id,
-    }).sort({
-      createdAt: -1,
-    });
+      author: userId,
+    })
+      .populate("author", "username fullName")
+      .sort({
+        createdAt: -1,
+      });
 
     const finalPosts = await attachLikedByMe({ userId, posts });
 
@@ -81,6 +82,48 @@ export const findMyPosts = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: `Houve um erro ao listar as publicações: ${err.message}`,
+    });
+  }
+};
+
+export const getFeed = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findById(userId).select("following");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuário não encontrado.",
+      });
+    }
+
+    const authors = [...user.following, user._id];
+
+    const posts = await Posts.find({
+      author: {
+        $in: authors,
+      },
+    })
+      .populate("author", "username fullName avatar")
+      .sort({
+        createdAt: -1,
+      });
+
+    const finalPosts = await attachLikedByMe({
+      userId,
+      posts,
+    });
+
+    return res.status(200).json({
+      success: true,
+      posts: finalPosts,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
     });
   }
 };
@@ -99,10 +142,12 @@ export const findPostsByUser = async (req, res) => {
     }
 
     const posts = await Posts.find({
-      authorId: user._id,
-    }).sort({
-      createdAt: -1,
-    });
+      author: user._id,
+    })
+      .populate("author", "username fullName avatar")
+      .sort({
+        createdAt: -1,
+      });
 
     const finalPosts = await attachLikedByMe({ userId: req.user.id, posts });
 
@@ -134,7 +179,7 @@ export const updatePost = async (req, res) => {
     const post = await Posts.findOneAndUpdate(
       {
         _id: postId,
-        authorId: userId,
+        author: userId,
       },
       {
         content: newContent,
@@ -143,7 +188,7 @@ export const updatePost = async (req, res) => {
         new: true,
         runValidators: true,
       },
-    );
+    ).populate("author", "username fullName avatar");
 
     if (!post) {
       return res.status(404).json({
@@ -190,7 +235,7 @@ export const deletePost = async (req, res) => {
       });
     }
 
-    if (post.authorId.toString() !== userId) {
+    if (post.author.toString() !== userId) {
       return res.status(403).json({
         success: false,
         message: "Você não tem permissão para excluir este post.",

@@ -4,6 +4,7 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { updateUnfollowCache } from "../../lib/update-unfollow-cache"
 import { User } from "@/entities/session/model/types"
+import { showError } from "@/shared/lib/get-server-error"
 
 export const useUnfollowUser = (user: User) => {
   const queryClient = useQueryClient()
@@ -24,9 +25,12 @@ export const useUnfollowUser = (user: User) => {
       })
       router.refresh()
     },
-    onError: (error) => {
-      console.error("Error unfollowing user:", error)
-      toast.error("Erro ao deixar de seguir usuário. Tente novamente.")
+    onError: (err) => {
+      const error = showError({
+        err,
+        genericMessage: "Erro ao deixar de seguir usuário. Tente novamente.",
+      })
+      toast.error(error)
     },
   })
 }

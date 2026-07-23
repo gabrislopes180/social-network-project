@@ -5,7 +5,13 @@ import UserPostList from "@/entities/posts/ui/user-posts"
 import { useUserPostsQuery } from "@/entities/users/model/useUserPostsQuery"
 import { Images } from "lucide-react"
 
-export default function UserPosts({ name, variant = "grid" }: { name: string, variant?: "feed" | "grid" }) {
+export default function UserPosts({
+  name,
+  variant = "grid",
+}: {
+  name: string
+  variant?: "feed" | "grid"
+}) {
   const { data, isLoading: isLoadingPosts } = useUserPostsQuery(name)
 
   if (isLoadingPosts || !data)
@@ -25,9 +31,5 @@ export default function UserPosts({ name, variant = "grid" }: { name: string, va
     )
   }
 
-  return (
-    <main className="flex flex-col items-center justify-center">
-      <UserPostList posts={data} variant={variant} />
-    </main>
-  )
+  return <UserPostList posts={data} variant="grid" />
 }

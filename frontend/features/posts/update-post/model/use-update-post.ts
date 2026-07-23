@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query"
 import { UpdatePost } from "../api/update-post"
 import { UpdatePayload, UpdateResponse } from "./interfaces"
 import { toast } from "sonner"
+import { showError } from "@/shared/lib/get-server-error"
 
 export const useUpdatePost = () => {
   return useMutation<UpdateResponse, Error, UpdatePayload>({
@@ -20,7 +21,11 @@ export const useUpdatePost = () => {
     },
 
     onError: (err) => {
-      toast.error(err.message)
+      const error = showError({
+        err,
+        genericMessage: "Houve um erro ao alterar",
+      })
+      toast.error(error)
     },
   })
 }
