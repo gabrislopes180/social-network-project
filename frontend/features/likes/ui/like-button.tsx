@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { IPost } from "@/entities/posts/model/interfaces"
-import { Handshake } from "lucide-react"
+import { HandHeart, Handshake } from "lucide-react"
 import { useLikePost } from "../model/use-like-post"
 import { SpinnerCustom } from "@/components/loading-spinner"
 import { useRemoveLike } from "../model/use-remove-like"
@@ -33,12 +33,12 @@ export default function LikeButton({ post, isFromMe }: LikeButtonProps) {
           size={"icon"}
           className={
             post.likedByMe
-              ? "bg-blue-500/20"
+              ? "animate-jump bg-like/20 animate-duration-200"
               : "border border-accent bg-background"
           }
           onClick={() => handleRemove(post._id)}
         >
-          <Handshake size={18} className="text-blue-500" />
+          <HandHeart size={18} className="text-like" />
         </Button>
         {post.likesCount}
       </>
@@ -52,7 +52,7 @@ export default function LikeButton({ post, isFromMe }: LikeButtonProps) {
         variant={"outline"}
         onClick={() => likePost(post._id)}
       >
-        <Handshake size={18} className="text-blue-500" />
+        <HandHeart size={18} className="text-like" />
       </Button>
       {post.likesCount}
     </>
