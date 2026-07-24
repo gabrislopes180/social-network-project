@@ -2,14 +2,9 @@ import { User } from "../models/User.js";
 import { Posts } from "../models/Posts.js";
 import { Like } from "../models/Likes.js";
 import { Comments } from "../models/Comments.js";
+import { authCookieOptions } from "../config/cookies.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-const cookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-};
 
 export const signUp = async (req, res) => {
   try {
@@ -134,12 +129,12 @@ export const login = async (req, res) => {
     );
 
     res.cookie("accessToken", token, {
-      ...cookieOptions,
+      ...authCookieOptions,
       maxAge: 1000 * 60 * 15, // 15 min
     });
 
     res.cookie("refreshToken", refreshToken, {
-      ...cookieOptions,
+      ...authCookieOptions,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
     });
 
@@ -211,7 +206,7 @@ export const refreshSession = async (req, res) => {
       );
 
       res.cookie("accessToken", newToken, {
-        ...cookieOptions,
+        ...authCookieOptions,
         maxAge: 1000 * 60 * 15, // 15 min
       });
 
@@ -232,10 +227,10 @@ export const refreshSession = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     res.clearCookie("accessToken", {
-      ...cookieOptions,
+      ...authCookieOptions,
     });
     res.clearCookie("refreshToken", {
-      ...cookieOptions,
+      ...authCookieOptions,
     });
     res.status(200).json({
       success: true,
@@ -277,11 +272,11 @@ export const deleteUser = async (req, res) => {
 
     //coisas a mais para apagar do banco
     res.clearCookie("accessToken", {
-      ...cookieOptions,
+      ...authCookieOptions,
     });
 
     res.clearCookie("refreshToken", {
-      ...cookieOptions,
+      ...authCookieOptions,
     });
 
     await Posts.deleteMany({ author: userId });

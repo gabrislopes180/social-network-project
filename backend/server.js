@@ -17,8 +17,12 @@ app.use(cookieParser());
 
 connectDB(process.env.MONGODB_URL);
 
+const allowedOrigins = process.env.FRONTEND_URL?.split(",").map((origin) =>
+  origin.trim(),
+);
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL,
+  origin: allowedOrigins,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
