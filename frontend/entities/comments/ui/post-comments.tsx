@@ -3,6 +3,7 @@ import { IComment } from "../model/interfaces"
 import { useQueryClient } from "@tanstack/react-query"
 import { cn } from "@/lib/utils"
 import DeleteButton from "@/features/comments/delete-comment/ui/delete-button"
+import Link from "next/link"
 
 export default function PostCommentsList({
   comments,
@@ -30,9 +31,12 @@ export default function PostCommentsList({
             <AvatarProfile className="h-8 w-8" />
 
             <div className="flex w-full flex-col">
-              <span className="font-medium text-foreground">
+              <Link
+                className="font-medium text-foreground"
+                href={`/user/${comment.userId.username}`}
+              >
                 {comment.userId.username}
-              </span>
+              </Link>
 
               <section className="flex w-full items-start justify-between gap-2">
                 <span className="max-w-9/10 wrap-break-word text-muted-foreground/80">

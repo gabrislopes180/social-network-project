@@ -17,13 +17,5 @@ export const useSessionQuery = () => {
     staleTime: 1000 * 5 * 60,
   })
 
-  const ValidateUserCache = (user: User) => {
-    queryClient.setQueryData(QUERY_KEY, user)
-  }
-
-  const clearSession = () => {
-    queryClient.setQueryData(QUERY_KEY, null)
-  }
-
-  return { user, isLoading, error, ValidateUserCache, clearSession }
+  return { user, isLoading, error }
 }

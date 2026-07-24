@@ -8,11 +8,22 @@ import { Mail } from "lucide-react"
 import { useGetUserByUsername } from "../model/useGetUserByUsernameQuery"
 import { ProfileCover } from "@/components/profile-cover"
 import { HeaderSkeleton } from "@/components/skeletons/profile-header-skeleton"
+import { useSessionQuery } from "@/entities/session/model/useSession"
+import { useEffect } from "react"
+import { useRouter } from "next/router"
 
 export default function UserFound({ name }: { name: string }) {
   const { res, isLoading } = useGetUserByUsername(name)
+  const { user } = useSessionQuery()
+  const router = useRouter()
 
-  if (!res || isLoading) {
+  useEffect(() => {
+    if (user?.username === name) {
+      router.replace("/profile")
+    }
+  }, [name, router, user])
+
+  if (!res || !user || isLoading) {
     return <HeaderSkeleton />
   }
 
