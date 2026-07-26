@@ -1,11 +1,6 @@
 import { api, apiServer } from "@/shared/api"
-import { User } from "../../session/model/types"
 import { getServerError } from "@/shared/lib/get-server-error"
-
-interface UserResponse {
-  success: boolean
-  user: User
-}
+import { UserFoundRespone } from "../model/interfaces"
 
 interface RequestParams {
   username: string
@@ -15,7 +10,7 @@ interface RequestParams {
 export async function GetUserByUsername({
   username,
   isFromClient,
-}: RequestParams): Promise<UserResponse> {
+}: RequestParams): Promise<UserFoundRespone> {
   try {
     if (isFromClient) {
       const res = await api.get(`/users/${username}`)

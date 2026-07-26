@@ -2,15 +2,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { FollowResponse } from "./types"
 import { followUser } from "../api/follow-user"
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
 import { updateFollowCache } from "../../lib/update-follow-cache"
 import { User } from "@/entities/session/model/types"
 import { showError } from "@/shared/lib/get-server-error"
+import { IServerError } from "@/shared/interfaces"
 
 export const useFollowUser = (user: User) => {
-  const router = useRouter()
   const queryClient = useQueryClient()
-  return useMutation<FollowResponse, Error, string>({
+  return useMutation<FollowResponse, IServerError, string>({
     mutationFn: async (userIdToFollow: string) =>
       followUser(userIdToFollow, user?._id),
 
@@ -18,11 +17,9 @@ export const useFollowUser = (user: User) => {
       if (!user) return
       updateFollowCache({
         followedUser: data.user,
-        loggedUserId: user?._id,
         queryClient: queryClient,
       })
       toast.success(data.message)
-      router.refresh()
     },
     onError: (error) => {
       const err = showError({

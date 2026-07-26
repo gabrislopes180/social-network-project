@@ -1,6 +1,5 @@
 import { User } from "@/entities/session/model/types"
 import { ReactNode } from "react"
-import { HeaderSkeleton } from "../skeletons/profile-header-skeleton"
 
 export interface UserProfileHeaderProps {
   user: User
@@ -22,7 +21,7 @@ export function UserProfileHeader({ user, actions }: UserProfileHeaderProps) {
       <div className="mt-6 flex w-full items-center justify-center gap-10 text-center">
         <div className="flex flex-col gap-1">
           <span className="text-[17px] font-semibold">
-            {user.followers?.length || 0}
+            {user.followersCount}
           </span>
           <span className="text-xs tracking-wider text-muted-foreground">
             Seguidores
@@ -30,14 +29,14 @@ export function UserProfileHeader({ user, actions }: UserProfileHeaderProps) {
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-[17px] font-semibold">
-            {user.following?.length || 0}
+            {user.followingCount}
           </span>
           <span className="text-xs tracking-wider text-muted-foreground">
             Seguindo
           </span>
         </div>
         <div className="flex flex-col gap-1">
-          <span className="text-[17px] font-semibold">166</span>
+          <span className="text-[17px] font-semibold">{user.postsCount}</span>
           <span className="text-xs tracking-wider text-muted-foreground">
             Posts
           </span>

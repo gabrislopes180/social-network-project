@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { LikeResponse } from "./interfaces"
-import { updatePostCache } from "@/entities/posts/lib/update-post-cache"
 import { toast } from "sonner"
 import { RemoveLike } from "../api/remove-like"
 import { showError } from "@/shared/lib/get-server-error"
+import { toggleLikeInCache } from "../lib/update-like-cache"
 
 export const useRemoveLike = (isFromMe: boolean) => {
   const queryClient = useQueryClient()
@@ -15,10 +15,11 @@ export const useRemoveLike = (isFromMe: boolean) => {
 
     onSuccess: (data) => {
       if (data.success) {
-        updatePostCache({
-          newPost: data.post,
+        toggleLikeInCache({
+          postId: data.post._id,
           queryClient,
           isFromMe,
+          action: "unlike",
         })
       }
     },

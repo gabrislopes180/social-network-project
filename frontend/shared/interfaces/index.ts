@@ -13,3 +13,8 @@ export interface ShowErrorParams {
   err: unknown
   genericMessage: string
 }
+
+export interface IUserParams {
+  username: string
+  isFromMe: boolean
+}

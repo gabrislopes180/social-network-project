@@ -21,7 +21,6 @@ export const useUnfollowUser = (user: User) => {
       updateUnfollowCache({
         queryClient: queryClient,
         followedUser: data.user,
-        loggedUserId: user?._id,
       })
       router.refresh()
     },

@@ -10,17 +10,12 @@ export default function UsersFoundList({ users }: Props) {
   return (
     <div className="mt-2 w-full">
       {users.map((user) => {
-        const isMe = user.username.toLowerCase() === user.username.toLowerCase()
-
         return (
           <div key={user._id} className="mb-1 rounded-lg border px-2 py-0.5">
             <div className="flex w-full items-center justify-between">
               <span className="text-xs">{user.username}</span>
 
-              <Link
-                href={isMe ? "/profile" : `/user/${user.username}`}
-                className="ml-2"
-              >
+              <Link href={`/user/${user.username}`} className="ml-2">
                 <Button size="xs">Olhar</Button>
               </Link>
             </div>

@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button"
 import { IPost } from "@/entities/posts/model/interfaces"
-import { HandHeart, Handshake } from "lucide-react"
+import { HandHeart } from "lucide-react"
 import { useLikePost } from "../model/use-like-post"
 import { SpinnerCustom } from "@/components/loading-spinner"
 import { useRemoveLike } from "../model/use-remove-like"
+import { useEffect } from "react"
 
 interface LikeButtonProps {
   post: IPost
@@ -11,8 +12,12 @@ interface LikeButtonProps {
 }
 
 export default function LikeButton({ post, isFromMe }: LikeButtonProps) {
-  const { likePost, isPending } = useLikePost(isFromMe)
+  const { likePost, isPending, data } = useLikePost(isFromMe)
   const { handleRemove, isPending: isRemovingLike } = useRemoveLike(isFromMe)
+
+  useEffect(() => {
+    console.log(data)
+  }, [data])
 
   if (isPending || isRemovingLike) {
     return (
@@ -26,7 +31,7 @@ export default function LikeButton({ post, isFromMe }: LikeButtonProps) {
     )
   }
 
-  if (post.likedByMe) {
+  if (data?.post.likedByMe || post.likedByMe) {
     return (
       <>
         <Button

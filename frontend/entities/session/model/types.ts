@@ -8,8 +8,9 @@ export interface User {
     color1: string
     color2: string
   }
-  followers: string[]
-  following: string[]
+  followersCount: number
+  followingCount: number
+  postsCount: number
   createdAt: string
 }
 

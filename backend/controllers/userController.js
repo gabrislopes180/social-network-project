@@ -62,6 +62,7 @@ export const getUsersBySearch = async (req, res) => {
 export const getUserByName = async (req, res) => {
   try {
     const { username } = req.params;
+    const loggedInUserId = req.user.id;
 
     if (!username?.trim()) {
       return res.status(200).json({
@@ -76,6 +77,39 @@ export const getUserByName = async (req, res) => {
         $options: "i",
       },
     }).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuário não encontrado.",
+      });
+    }
+
+    let isFollowing = false;
+    let followsMe = false;
+
+    if (loggedInUserId) {
+      const [isFollowingResult, followsMeResult] = await Promise.all([
+        Follows.exists({
+          followerId: loggedInUserId,
+          followingId: user._id,
+        }),
+        Follows.exists({
+          followerId: user._id,
+          followingId: loggedInUserId,
+        }),
+      ]);
+
+      isFollowing = !!isFollowingResult;
+      followsMe = !!followsMeResult;
+    }
+
+    return res.status(200).json({
+      success: true,
+      user,
+      isFollowing,
+      followsMe,
+    });
 
     return res.status(200).json({
       success: true,

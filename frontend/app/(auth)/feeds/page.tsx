@@ -1,5 +1,4 @@
 import FeedPosts from "@/widgets/feeds"
-import MyPostsWidget from "@/widgets/myPosts"
 
 export default function Page() {
   return (

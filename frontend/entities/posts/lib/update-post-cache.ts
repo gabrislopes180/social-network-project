@@ -17,19 +17,19 @@ export const addPostToCache = ({ newPost, queryClient }: UpdateCacheProps) => {
   })
 }
 
-export const updatePostCache = ({
-  newPost,
-  queryClient,
-  isFromMe,
-}: UpdateCacheProps) => {
-  const ACTIVE_KEY = isFromMe === true ? QUERY_KEY : ["user-posts"]
-  queryClient.setQueryData<IPost[]>(ACTIVE_KEY, (oldData) => {
+export const updatePostCache = ({ newPost, queryClient }: UpdateCacheProps) => {
+  const updateFn = (oldData: IPost[] | undefined) => {
     if (!oldData) return oldData
-
     return oldData.map((currentPost) =>
       currentPost._id === newPost._id ? newPost : currentPost
     )
-  })
+  }
+
+  queryClient.setQueriesData({ queryKey: ["posts"] }, updateFn)
+  queryClient.setQueriesData(
+    { queryKey: ["user-posts", newPost.author] },
+    updateFn
+  )
 }
 
 export const deletePostFromCache = (id: string, queryClient: QueryClient) => {

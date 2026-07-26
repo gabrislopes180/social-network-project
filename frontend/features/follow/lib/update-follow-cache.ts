@@ -4,16 +4,14 @@ import { FollowResponse } from "../follow-user/model/types"
 
 interface FollowCacheProps {
   followedUser: User
-  loggedUserId: string
   queryClient: QueryClient
 }
 
 export const updateFollowCache = ({
   followedUser,
-  loggedUserId,
   queryClient,
 }: FollowCacheProps) => {
-  // Atualiza o perfil visitado
+  // 1. Atualiza o perfil visitado (quem recebeu o follow)
   queryClient.setQueryData<FollowResponse>(
     ["user-found", followedUser.username],
     (old) => {
@@ -21,21 +19,24 @@ export const updateFollowCache = ({
 
       return {
         ...old,
+        isFollowing: true, // Muda o status para true
         user: {
           ...old.user,
-          followers: [...old.user.followers, loggedUserId],
+          // Incrementa o contador de seguidores do perfil visitado
+          followersCount: (old.user.followersCount || 0) + 1,
         },
       }
     }
   )
 
-  // Atualiza o usuário logado
+  // 2. Atualiza a sessão do usuário logado (quem deu o follow)
   queryClient.setQueryData<User>(["session"], (old) => {
     if (!old) return old
 
     return {
       ...old,
-      following: [...old.following, followedUser._id],
+      // Incrementa o contador de "seguindo" do usuário logado
+      followingCount: (old.followingCount || 0) + 1,
     }
   })
 }

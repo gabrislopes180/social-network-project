@@ -1,29 +1,12 @@
-"use client"
-
-import { useSessionQuery } from "@/entities/session/model/useSession"
-import { SpinnerCustom } from "./loading-spinner"
-import { useGetUserByUsername } from "@/entities/users/model/useGetUserByUsernameQuery"
-import { Skeleton } from "./ui/skeleton"
 import { User } from "@/entities/session/model/types"
 
 interface ProfileCoverProps {
-  name?: string
-  userFound?: User
+  user: User
 }
 
-export function ProfileCover({ userFound, name }: ProfileCoverProps) {
-  const { user, isLoading } = useSessionQuery()
-
-  const currentUser = !name ? user : userFound
-
-  const color1 = currentUser?.preferences?.color1
-  const color2 = currentUser?.preferences?.color2
-
-  if (isLoading) {
-    return (
-      <Skeleton className="relative z-0 mt-4 h-32 w-full rounded-t-xl shadow-sm md:h-48" />
-    )
-  }
+export function ProfileCover({ user }: ProfileCoverProps) {
+  const color1 = user.preferences?.color1
+  const color2 = user.preferences?.color2
 
   return (
     <div

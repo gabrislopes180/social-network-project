@@ -6,16 +6,14 @@ export const followUser = async (req, res) => {
     const loggedInUserId = req.user.id;
     const { userIdToFollow } = req.params;
 
-    const loggedInUser = await User.findById(loggedInUserId);
-
-    if (!loggedInUser) {
-      return res.status(404).json({
+    if (loggedInUserId === userIdToFollow) {
+      return res.status(400).json({
         success: false,
-        message: "Usuário logado não encontrado.",
+        message: "Você não pode seguir a si mesmo.",
       });
     }
 
-    // Find the user to follow
+    // Busca o usuário que será seguido para garantir que ele existe
     const userToFollow = await User.findById(userIdToFollow);
     if (!userToFollow) {
       return res.status(404).json({
@@ -24,28 +22,39 @@ export const followUser = async (req, res) => {
       });
     }
 
-    // Check if the user is already being followed
-    if (loggedInUser.following.includes(userIdToFollow)) {
+    // 1. Verifica se já está seguindo consultando a collection separada
+    const existingFollow = await Follows.findOne({
+      followerId: loggedInUserId,
+      followingId: userIdToFollow,
+    });
+
+    if (existingFollow) {
       return res.status(400).json({
         success: false,
         message: "Você já está seguindo este usuário.",
       });
     }
 
-    // Add the user to the following list
     const follow = await Follows.create({
-      followId: crypto.randomUUID(),
       followerId: loggedInUserId,
       followingId: userIdToFollow,
     });
 
-    loggedInUser.following.push(userIdToFollow);
-    userToFollow.followers.push(loggedInUserId);
-    await loggedInUser.save();
-    await userToFollow.save();
+    await User.findByIdAndUpdate(loggedInUserId, {
+      $inc: { followingCount: 1 },
+    });
+
+    await User.findByIdAndUpdate(userIdToFollow, {
+      $inc: { followersCount: 1 },
+    });
+
+    const isFollowedBy = await Follows.exists({
+      followerId: userIdToFollow,
+      followingId: loggedInUserId,
+    });
 
     const status = {
-      followedBy: loggedInUser.followers.includes(userIdToFollow),
+      followedBy: !!isFollowedBy,
       isFollowing: true,
       id: follow._id,
       followedUser: {
@@ -57,7 +66,6 @@ export const followUser = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: `Você começou a seguir ${userToFollow.username}`,
-      user: userToFollow,
       status,
     });
   } catch (error) {
@@ -87,45 +95,34 @@ export const unfollowUser = async (req, res) => {
       });
     }
 
-    // Find the user to unfollow
-    const userToUnfollow = await User.findById(userIdToUnfollow);
-    if (!userToUnfollow) {
-      return res.status(404).json({
+    if (loggedInUserId === userIdToUnfollow) {
+      return res.status(400).json({
         success: false,
-        message: "Usuário não encontrado.",
+        message: "Você não pode deixar de seguir a si mesmo.",
       });
     }
 
-    const loggedInUser = await User.findById(loggedInUserId);
-    if (!loggedInUser) {
-      return res.status(404).json({
-        success: false,
-        message: "Usuário logado não encontrado.",
-      });
-    }
+    const deletedFollow = await Follows.findOneAndDelete({
+      followerId: loggedInUserId,
+      followingId: userIdToUnfollow,
+    });
 
-    // Check if the user is currently being followed
-    if (!userToUnfollow.followers.includes(loggedInUserId)) {
+    if (!deletedFollow) {
       return res.status(400).json({
         success: false,
         message: "Você não está seguindo este usuário.",
       });
     }
 
-    // Remove the user from the following list
-    await Follows.findOneAndDelete({
-      followerId: loggedInUserId,
-      followingId: userIdToUnfollow,
+    await User.findByIdAndUpdate(loggedInUserId, {
+      $inc: { followingCount: -1 },
     });
 
-    loggedInUser.following = loggedInUser.following.filter(
-      (id) => id.toString() !== userIdToUnfollow,
+    const userToUnfollow = await User.findByIdAndUpdate(
+      userIdToUnfollow,
+      { $inc: { followersCount: -1 } },
+      { new: true }, // Garante que a variável receberá o usuário já com o -1 aplicado
     );
-    userToUnfollow.followers = userToUnfollow.followers.filter(
-      (id) => id.toString() !== loggedInUserId,
-    );
-    await loggedInUser.save();
-    await userToUnfollow.save();
 
     return res.status(200).json({
       success: true,

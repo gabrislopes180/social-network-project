@@ -1,41 +1,38 @@
 import { QueryClient } from "@tanstack/react-query"
 import { User } from "@/entities/session/model/types"
-import { FollowResponse } from "../follow-user/model/types"
+import { unfollowResponse } from "../follow-user/api/unfollow-user"
 
 interface UnfollowCacheProps {
   followedUser: User
-  loggedUserId: string
   queryClient: QueryClient
 }
 
 export const updateUnfollowCache = ({
   followedUser,
-  loggedUserId,
   queryClient,
 }: UnfollowCacheProps) => {
-  // Atualiza o perfil visitado
-  queryClient.setQueryData<FollowResponse>(
+  queryClient.setQueryData<unfollowResponse>(
     ["user-found", followedUser.username],
     (old) => {
       if (!old) return old
 
       return {
         ...old,
+        isFollowing: false,
         user: {
           ...old.user,
-          followers: old.user.followers.filter((id) => id !== loggedUserId),
+          followersCount: Math.max(0, (old.user.followersCount || 0) - 1),
         },
       }
     }
   )
 
-  // Atualiza o usuário logado
   queryClient.setQueryData<User>(["session"], (old) => {
     if (!old) return old
 
     return {
       ...old,
-      following: old.following.filter((id) => id !== followedUser._id),
+      followingCount: Math.max(0, (old.followingCount || 0) - 1),
     }
   })
 }

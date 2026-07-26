@@ -35,9 +35,6 @@ export const signUp = async (req, res) => {
       });
     }
 
-    const followers = [];
-    const following = [];
-
     const createdAt = new Date();
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -56,8 +53,6 @@ export const signUp = async (req, res) => {
       password: hashedPassword,
       description,
       preferences,
-      followers,
-      following,
       createdAt,
     }).save();
 
@@ -82,7 +77,7 @@ export const signUp = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Houve um erro ao gerar o cadastro",
-      error: err.message,
+      detail: err.message,
     });
   }
 };
@@ -289,8 +284,8 @@ export const deleteUser = async (req, res) => {
       {},
       {
         $pull: {
-          followers: userId,
-          following: userId,
+          followersCount: userId,
+          followingCount: userId,
         },
       },
     );

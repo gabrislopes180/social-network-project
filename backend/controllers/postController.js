@@ -1,4 +1,5 @@
 import { Posts } from "../models/Posts.js";
+import { Follows } from "../models/Follows.js";
 import { User } from "../models/User.js";
 import { uploadImage } from "../services/cloudinary/upload-image.js";
 import { attachLikedByMe } from "../services/posts/attachLikedByMe.js";
@@ -46,6 +47,10 @@ export const uploadPost = async (req, res) => {
       imageUrl,
     });
 
+    await User.findByIdAndUpdate(authorId, {
+      $inc: { postsCount: 1 },
+    });
+
     const finalPost = await attachLikedByMePost({ userId: authorId, post });
 
     return res.status(201).json({
@@ -90,16 +95,13 @@ export const getFeed = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const user = await User.findById(userId).select("following");
+    const followingDocs = await Follows.find({ followerId: userId }).select(
+      "followingId",
+    );
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "Usuário não encontrado.",
-      });
-    }
+    const followingIds = followingDocs.map((doc) => doc.followingId);
 
-    const authors = [...user.following, user._id];
+    const authors = [...followingIds, userId];
 
     const posts = await Posts.find({
       author: {
@@ -243,6 +245,10 @@ export const deletePost = async (req, res) => {
     }
 
     await Posts.findByIdAndDelete(postId);
+
+    await User.findByIdAndUpdate(userId, {
+      $inc: { postsCount: -1 },
+    });
 
     return res.status(200).json({
       success: true,

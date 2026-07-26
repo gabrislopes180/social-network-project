@@ -10,15 +10,14 @@ const UserSchema = new mongoose.Schema({
     color1: { type: String },
     color2: { type: String },
   },
-  followers: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "User",
-    default: [],
+  postsCount: { type: Number, default: 0 },
+  followersCount: {
+    type: Number,
+    default: 0,
   },
-  following: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "User",
-    default: [],
+  followingCount: {
+    type: Number,
+    default: 0,
   },
   createdAt: { type: Date, default: Date.now },
 });
