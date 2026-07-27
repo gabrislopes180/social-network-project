@@ -76,11 +76,7 @@ export default function FollowButton({
 
   return (
     <Button className="w-full" onClick={() => mutate(id)} disabled={isPending}>
-      {isPending ? (
-        <SpinnerCustom variant="background" />
-      ) : (
-        <>{isFollowing && followsMe ? "Vocês se seguem" : "Seguir"}</>
-      )}
+      {isPending ? <SpinnerCustom variant="background" /> : "Seguir"}
     </Button>
   )
 }

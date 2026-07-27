@@ -1,10 +1,13 @@
+import { SpinnerCustom } from "@/components/loading-spinner"
 import { INotification } from "@/entities/notifications/model/interfaces"
 import { useNotificationsQuery } from "@/entities/notifications/model/use-notifications-query"
+import { useMarkNotification } from "@/features/notifications/mark-as-viewed/model/use-mark-notification"
 import { useEffect, useRef } from "react"
 import { toast } from "sonner"
 
 export const GlobalNotificationObserver = () => {
   const { data } = useNotificationsQuery()
+  const { mutate: markNotificationAsViewed } = useMarkNotification()
 
   const toastedIds = useRef<Set<string>>(new Set())
 
@@ -28,7 +31,22 @@ export const GlobalNotificationObserver = () => {
         message = `${notif.sender.username} comentou no seu post 💬`
 
       toast(message, {
+        id: notif._id,
         description: "Agora mesmo",
+        duration: Infinity,
+        action: {
+          label: "Ok",
+          onClick: () => {
+            markNotificationAsViewed(notif._id, {
+              onSuccess: () => {
+                toast.dismiss(notif._id)
+              },
+              onError: () => {
+                toast.error("Erro ao marcar como lida.")
+              },
+            })
+          },
+        },
       })
 
       toastedIds.current.add(notif._id)
