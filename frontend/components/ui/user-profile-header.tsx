@@ -3,18 +3,29 @@ import { ReactNode } from "react"
 
 export interface UserProfileHeaderProps {
   user: User
+  isFromMe: boolean
   actions?: ReactNode
 }
 
-export function UserProfileHeader({ user, actions }: UserProfileHeaderProps) {
+export function UserProfileHeader({
+  user,
+  actions,
+  isFromMe,
+}: UserProfileHeaderProps) {
   return (
     <section className="mt-2 flex w-full flex-col items-center justify-center px-4">
       <h1 className="text-2xl font-bold">{user.fullName}</h1>
       <p className="text-muted-foreground">@{user.username}</p>
       <p className="mt-2 max-w-70 text-center text-sm text-foreground/80">
-        {!user.description || user.description.trim() === ""
-          ? "Clique abaixo para editar seu perfil e adicionar uma descrição"
-          : user.description}
+        {!user.description || user.description.trim() === "" ? (
+          <>
+            {isFromMe
+              ? "Clique abaixo para editar seu perfil e adicionar uma descrição"
+              : ""}
+          </>
+        ) : (
+          user.description
+        )}
       </p>
 
       {/* Stats */}

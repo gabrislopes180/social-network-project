@@ -1,4 +1,3 @@
-import { SpinnerCustom } from "@/components/loading-spinner"
 import { INotification } from "@/entities/notifications/model/interfaces"
 import { useNotificationsQuery } from "@/entities/notifications/model/use-notifications-query"
 import { useMarkNotification } from "@/features/notifications/mark-as-viewed/model/use-mark-notification"

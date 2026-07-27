@@ -48,13 +48,11 @@ export default function UserProfile({ username, isFromMe }: IUserParams) {
 
       <UserProfileHeader
         user={currentUser.user}
+        isFromMe={isFromMe}
         actions={
           isFromMe ? (
             <Link href="/config/data">
-              <Button
-                variant="secondary"
-                className="rounded-full px-8 font-semibold shadow-none"
-              >
+              <Button variant="secondary" className="font-mediumne px-3">
                 Editar Perfil
               </Button>
             </Link>
