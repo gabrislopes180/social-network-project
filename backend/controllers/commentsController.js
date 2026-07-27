@@ -8,12 +8,10 @@ export const createComment = async (req, res) => {
     const { postId } = req.params;
     const { commentText } = req.body;
 
-    const post = await Posts.findById(postId);
-
     if (!postId) {
       return res.status(404).json({
         success: false,
-        message: "Post não encontrado",
+        message: "Post ID não fornecido",
       });
     }
 
@@ -30,9 +28,22 @@ export const createComment = async (req, res) => {
       commentText: commentText.trim(),
     });
 
-    await Posts.findByIdAndUpdate(postId, {
-      $inc: { commentsCount: 1 },
-    });
+    const updatedPost = await Posts.findByIdAndUpdate(
+      postId,
+      {
+        $inc: { commentsCount: 1 },
+      },
+      {
+        new: true,
+      },
+    ).populate("author", "username fullName avatar");
+
+    if (!updatedPost) {
+      return res.status(404).json({
+        success: false,
+        message: "Post não encontrado",
+      });
+    }
 
     await comment.populate("userId", "username fullName");
 
@@ -41,8 +52,10 @@ export const createComment = async (req, res) => {
       isMyComment: comment.userId._id.toString() === req.user.id,
     };
 
+    console.log(updatedPost);
+
     createNotification({
-      recipientId: finalComment.userId._id,
+      recipientId: updatedPost.author._id,
       senderId: userId,
       type: "comment",
     });

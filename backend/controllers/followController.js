@@ -84,7 +84,8 @@ export const followUser = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Houve um erro ao seguir o usuário",
+      detail: error.message,
     });
   }
 };
