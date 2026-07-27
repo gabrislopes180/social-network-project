@@ -32,7 +32,7 @@ export function SidebarWidget() {
         </SidebarGroup>
         <SidebarGroup>
           <Link
-            href={"/profile"}
+            href={`/user/${user?.username}`}
             className="flex items-center gap-1 rounded-lg text-sm transition-all duration-300 hover:bg-foreground/20"
           >
             <Button size={"icon"}>

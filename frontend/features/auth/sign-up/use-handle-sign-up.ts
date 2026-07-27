@@ -64,7 +64,7 @@ export function useHandleSignUp() {
         description: "Clique para prosseguir e personalizar seu perfil",
         action: { label: "Ir", onClick: () => router.push("/config/data") },
       })
-      router.replace("/config/data")
+      router.replace("/feeds")
     } catch (err) {
       const message = showError({
         err,

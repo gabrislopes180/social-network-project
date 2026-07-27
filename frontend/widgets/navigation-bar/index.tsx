@@ -15,9 +15,7 @@ export default function NavBar() {
   const { user } = useSessionQuery()
 
   const shouldRender =
-    pathname.startsWith("/feeds") ||
-    pathname.startsWith("/profile") ||
-    pathname.startsWith("/user/")
+    pathname.startsWith("/feeds") || pathname.startsWith("/user/")
 
   if (!shouldRender) return null
 
@@ -46,7 +44,7 @@ export default function NavBar() {
           className="flex flex-col items-center justify-center p-2"
         >
           <AvatarProfile
-            className={`h-8 w-8 border-2 transition-all duration-300 md:h-8 md:w-8 ${pathname.startsWith("/profile") ? "border-foreground" : "border-transparent"}`}
+            className={`h-8 w-8 border-2 transition-all duration-300 md:h-8 md:w-8 ${pathname.startsWith("/user") ? "border-foreground" : "border-transparent"}`}
             wrapperClassName="m-0"
           />
         </Link>

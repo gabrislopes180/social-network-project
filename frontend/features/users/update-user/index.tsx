@@ -122,7 +122,9 @@ export default function UpdateUser() {
           </Button>
         </div>
       ) : (
-        <Button onClick={handleStartEditing}>Deseja editar seus dados?</Button>
+        <Button onClick={handleStartEditing} className="my-12">
+          Deseja editar seus dados?
+        </Button>
       )}
     </>
   )

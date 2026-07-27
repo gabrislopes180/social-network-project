@@ -39,8 +39,6 @@ export const signUp = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const description = "";
-
     const preferences = {
       color1: "#000000",
       color2: "#333333",
@@ -51,7 +49,6 @@ export const signUp = async (req, res) => {
       fullName,
       username,
       password: hashedPassword,
-      description,
       preferences,
       createdAt,
     }).save();
@@ -65,19 +62,12 @@ export const signUp = async (req, res) => {
     if (err.code === 11000) {
       const field = Object.keys(err.keyPattern)[0];
 
-      // Adicionamos esse log para você ver exatamente o que está estourando no painel do Render!
-      console.log("❌ ERRO DE DUPLICAÇÃO NO MONGODB. Campo rejeitado:", field);
-
-      // Agora a mensagem reflete o campo real que deu problema
-      let errorMessage = `Este ${field} já está em uso.`;
-
-      if (field === "email") errorMessage = "Este e-mail já está em uso.";
-      if (field === "username")
-        errorMessage = "Este nome de usuário já está em uso.";
-
       return res.status(409).json({
         success: false,
-        message: errorMessage,
+        message:
+          field === "email"
+            ? "Este e-mail já está em uso."
+            : "Este nome de usuário já está em uso.",
       });
     }
 
