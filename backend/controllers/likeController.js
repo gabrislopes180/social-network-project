@@ -1,6 +1,7 @@
 import { Like } from "../models/Likes.js";
 import { Posts } from "../models/Posts.js";
 import { attachLikedByMePost } from "../services/posts/attachLikedByMePost.js";
+import { createNotification } from "../services/notifications/create-notification.js";
 
 export const CreateLike = async (req, res) => {
   try {
@@ -34,7 +35,7 @@ export const CreateLike = async (req, res) => {
       {
         new: true,
       },
-    );
+    ).populate("author", "username fullName avatar");
 
     if (!updatedPost) {
       return res.status(404).json({
@@ -49,6 +50,13 @@ export const CreateLike = async (req, res) => {
     });
 
     console.log(finalPost);
+
+    createNotification({
+      recipientId: updatedPost.author._id,
+      senderId: userId,
+      type: "like",
+      relatedPostId: postId,
+    });
 
     return res.status(201).json({
       success: true,

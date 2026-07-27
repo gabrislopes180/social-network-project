@@ -11,11 +11,13 @@ export const updateCommentCache = ({
   queryClient,
 }: UpdateCacheProps) => {
   const QUERY_KEY = ["comments", comment.postId]
-  queryClient.setQueryData<IComment[]>(QUERY_KEY, (oldData) => {
+  const updateFn = (oldData: IComment[] | undefined) => {
     if (!oldData) return
 
     return [comment, ...oldData]
-  })
+  }
+
+  queryClient.setQueriesData({ queryKey: QUERY_KEY }, updateFn)
 
   queryClient.setQueryData(
     ["new-comment-animation", comment.postId],

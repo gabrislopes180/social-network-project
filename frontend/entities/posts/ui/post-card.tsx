@@ -1,3 +1,5 @@
+"use client"
+
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { IPost } from "../model/interfaces"
 import { AvatarProfile } from "@/components/profile-avatar"

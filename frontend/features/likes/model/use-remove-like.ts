@@ -3,7 +3,7 @@ import { LikeResponse } from "./interfaces"
 import { toast } from "sonner"
 import { RemoveLike } from "../api/remove-like"
 import { showError } from "@/shared/lib/get-server-error"
-import { toggleLikeInCache } from "../lib/update-like-cache"
+import { updatePostCache } from "@/entities/posts/lib/update-post-cache"
 
 export const useRemoveLike = (isFromMe: boolean) => {
   const queryClient = useQueryClient()
@@ -15,11 +15,10 @@ export const useRemoveLike = (isFromMe: boolean) => {
 
     onSuccess: (data) => {
       if (data.success) {
-        toggleLikeInCache({
-          postId: data.post._id,
+        updatePostCache({
+          newPost: data.post,
           queryClient,
           isFromMe,
-          action: "unlike",
         })
       }
     },

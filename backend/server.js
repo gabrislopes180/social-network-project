@@ -11,6 +11,7 @@ import { followRouter } from "./routes/followRoutes.js";
 import { postRouter } from "./routes/postRoutes.js";
 import { likesRouter } from "./routes/likeRoutes.js";
 import { commentsRouter } from "./routes/commentsRoutes.js";
+import { notificationRouter } from "./routes/notificationRoutes.js";
 
 const app = express();
 app.use(cookieParser());
@@ -41,6 +42,7 @@ app.use("/follows", followRouter);
 app.use("/posts", postRouter);
 app.use("/likes", likesRouter);
 app.use("/comments", commentsRouter);
+app.use("/notifications", notificationRouter);
 
 app.listen(process.env.PORT, () => {
   console.log("Hello Express!");

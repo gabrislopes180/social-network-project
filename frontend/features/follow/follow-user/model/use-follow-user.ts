@@ -16,10 +16,10 @@ export const useFollowUser = (user: User) => {
     onSuccess: (data) => {
       if (!user) return
       updateFollowCache({
-        followedUser: data.user,
+        targetUsername: data.status.followedUser.username,
+        isFollowingAction: true,
         queryClient: queryClient,
       })
-      toast.success(data.message)
     },
     onError: (error) => {
       const err = showError({

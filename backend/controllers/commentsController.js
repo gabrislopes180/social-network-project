@@ -1,5 +1,6 @@
 import { Comments } from "../models/Comments.js";
 import { Posts } from "../models/Posts.js";
+import { createNotification } from "../services/notifications/create-notification.js";
 
 export const createComment = async (req, res) => {
   try {
@@ -39,6 +40,12 @@ export const createComment = async (req, res) => {
       ...comment.toObject(),
       isMyComment: comment.userId._id.toString() === req.user.id,
     };
+
+    createNotification({
+      recipientId: finalComment.userId._id,
+      senderId: userId,
+      type: "comment",
+    });
 
     return res.status(201).json({
       success: true,

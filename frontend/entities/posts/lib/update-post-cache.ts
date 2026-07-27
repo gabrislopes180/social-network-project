@@ -25,11 +25,9 @@ export const updatePostCache = ({ newPost, queryClient }: UpdateCacheProps) => {
     )
   }
 
+  queryClient.setQueriesData({ queryKey: ["feed"] }, updateFn)
   queryClient.setQueriesData({ queryKey: ["posts"] }, updateFn)
-  queryClient.setQueriesData(
-    { queryKey: ["user-posts", newPost.author] },
-    updateFn
-  )
+  queryClient.setQueriesData({ queryKey: ["user-posts"] }, updateFn)
 }
 
 export const deletePostFromCache = (id: string, queryClient: QueryClient) => {

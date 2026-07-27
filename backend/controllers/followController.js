@@ -1,5 +1,6 @@
 import { User } from "../models/User.js";
 import { Follows } from "../models/Follows.js";
+import { createNotification } from "../services/notifications/create-notification.js";
 
 export const followUser = async (req, res) => {
   try {
@@ -62,6 +63,18 @@ export const followUser = async (req, res) => {
         username: userToFollow.username,
       },
     };
+
+    createNotification({
+      senderId: loggedInUserId,
+      recipientId: userIdToFollow,
+      type: "follow",
+    });
+
+    console.log({
+      success: true,
+      message: `Você começou a seguir ${userToFollow.username}`,
+      status,
+    });
 
     return res.status(200).json({
       success: true,
