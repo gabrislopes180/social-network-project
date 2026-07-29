@@ -1,9 +1,8 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { MeRequest } from "../api/me"
 import { User } from "./types"
 
 export const useSessionQuery = () => {
-  const queryClient = useQueryClient()
   const QUERY_KEY = ["session"]
 
   const {

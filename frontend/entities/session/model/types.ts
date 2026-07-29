@@ -10,6 +10,8 @@ export interface User {
   }
   followersCount: number
   followingCount: number
+  hasLeadershipBadge: boolean
+  groupsCreatedCount: number
   postsCount: number
   createdAt: string
 }
