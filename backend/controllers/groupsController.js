@@ -3,7 +3,7 @@ import { Group } from "../models/Group.js";
 
 export const CreateGroup = async (req, res) => {
   try {
-    const { name, allowMembersToPost } = req.body;
+    const { name, allowMembersToPost, description } = req.body;
 
     const userId = req.user.id || req.user._id;
 
@@ -43,7 +43,7 @@ export const CreateGroup = async (req, res) => {
       });
     }
 
-    if (!name || allowMembersToPost === undefined) {
+    if (!name || !description || allowMembersToPost === undefined) {
       return res.status(400).json({
         success: false,
         message: "Dados incompletos para a criação do grupo.",
@@ -62,6 +62,7 @@ export const CreateGroup = async (req, res) => {
     const createdGroup = await Group.create({
       name,
       allowMembersToPost,
+      description,
       leaderId: user._id,
       creatorId: user._id,
     });
@@ -75,6 +76,41 @@ export const CreateGroup = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Houve um erro ao criar o grupo",
+      detail: err.message,
+    });
+  }
+};
+
+export const getGroups = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const userId = req.user.id || req.user._id;
+
+    const groups = await Group.find({
+      $or: [{ leaderId: userId }, { members: userId }],
+    })
+      .sort({ xp: -1 })
+      .lean();
+
+    const groupsWithLeaderFlag = groups.map((group) => {
+      const currentLeaderId = group.leaderId._id.toString();
+      const currentUserId = userId.toString();
+
+      return {
+        ...group,
+        meLeader: currentLeaderId === currentUserId,
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      groupsWithLeaderFlag,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Houve um erro ao carregar os grupos",
       detail: err.message,
     });
   }

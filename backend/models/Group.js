@@ -10,7 +10,7 @@ const GroupSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      default: "",
+      required: true,
     },
     creatorId: {
       type: mongoose.Schema.Types.ObjectId,

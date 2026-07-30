@@ -8,4 +8,5 @@ export interface IGroup {
   createdAt: Date
   updatedAt: Date
   lastLeadershipTransfer: Date
+  meLeader?: boolean
 }
