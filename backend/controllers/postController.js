@@ -130,6 +130,11 @@ export const getFeed = async (req, res) => {
   }
 };
 
+export const getFeedByGroup = async (req, res) => {
+  const userId = req.user.id || req.user._id;
+  const { groupdId } = req.params;
+};
+
 export const findPostsByUser = async (req, res) => {
   try {
     const { username } = req.params;

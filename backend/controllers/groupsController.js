@@ -83,8 +83,6 @@ export const CreateGroup = async (req, res) => {
 
 export const getGroups = async (req, res) => {
   try {
-    const userId = req.user.id;
-
     const userId = req.user.id || req.user._id;
 
     const groups = await Group.find({
@@ -105,12 +103,43 @@ export const getGroups = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      groupsWithLeaderFlag,
+      groups: groupsWithLeaderFlag,
     });
   } catch (err) {
     return res.status(500).json({
       success: false,
       message: "Houve um erro ao carregar os grupos",
+      detail: err.message,
+    });
+  }
+};
+
+export const getGroupById = async (req, res) => {
+  try {
+    const userId = req.user.id || req.user._id;
+    const { groupId } = req.params;
+
+    const group = await Group.findById(groupId);
+
+    if (!group)
+      return res.status(404).json({
+        success: false,
+        message: "Grupo não encontrado.",
+      });
+
+    const currentLeaderId = group.leaderId._id.toString();
+    const currentUserId = userId.toString();
+
+    const finalGroup = {
+      ...group.toObject(),
+      meLeader: currentLeaderId === currentUserId,
+    };
+
+    return res.status(200).json(finalGroup);
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Houve um erro ao carregar o grupo",
       detail: err.message,
     });
   }
