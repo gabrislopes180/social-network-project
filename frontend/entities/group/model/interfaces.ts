@@ -3,7 +3,11 @@ export interface IGroup {
   name: string
   description: string
   creatorId: string
-  leaderId: string
+  leader: {
+    _id: string
+    username: string
+    fullName: string
+  }
   members: string[]
   allowMembersToPost: boolean
   xp: number

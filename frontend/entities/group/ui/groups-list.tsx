@@ -40,7 +40,7 @@ export function GroupsList({ groups }: { groups: IGroup[] }) {
                   <p className="text-[10px]">Você é o lider</p>
                 </section>
               )}
-              <Link href={`/groups/feeds/${group._id}`}>
+              <Link href={`/groups/${group._id}/feeds`}>
                 <Button
                   size={"xs"}
                   variant={"outline"}

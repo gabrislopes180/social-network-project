@@ -18,7 +18,7 @@ const GroupSchema = new mongoose.Schema(
       required: true,
     },
     // 1. O líder único do grupo
-    leaderId: {
+    leader: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,

@@ -24,18 +24,11 @@ export default async function FeedsByGroup({
       }),
   })
 
-  console.log(
-    "Resultado do prefetch: ",
-    queryClient.getQueryState(["group", groupId])
-  )
-
   return (
-    <>
+    <div className="flex flex-col items-center justify-center">
       <HydrationBoundary state={dehydrate(queryClient)}>
         <GroupInfoCard groupId={groupId} />
       </HydrationBoundary>
-
-      <p>Tela de feeds do grupo de id: {groupId}</p>
-    </>
+    </div>
   )
 }

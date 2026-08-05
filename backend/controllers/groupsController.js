@@ -63,7 +63,7 @@ export const CreateGroup = async (req, res) => {
       name,
       allowMembersToPost,
       description,
-      leaderId: user._id,
+      leader: user._id,
       creatorId: user._id,
     });
 
@@ -86,13 +86,13 @@ export const getGroups = async (req, res) => {
     const userId = req.user.id || req.user._id;
 
     const groups = await Group.find({
-      $or: [{ leaderId: userId }, { members: userId }],
+      $or: [{ leader: userId }, { members: userId }],
     })
       .sort({ xp: -1 })
       .lean();
 
     const groupsWithLeaderFlag = groups.map((group) => {
-      const currentLeaderId = group.leaderId._id.toString();
+      const currentLeaderId = group.leader._id.toString();
       const currentUserId = userId.toString();
 
       return {
@@ -119,7 +119,10 @@ export const getGroupById = async (req, res) => {
     const userId = req.user.id || req.user._id;
     const { groupId } = req.params;
 
-    const group = await Group.findById(groupId);
+    const group = await Group.findById(groupId).populate(
+      "leader",
+      "username fullName",
+    );
 
     if (!group)
       return res.status(404).json({
@@ -127,13 +130,15 @@ export const getGroupById = async (req, res) => {
         message: "Grupo não encontrado.",
       });
 
-    const currentLeaderId = group.leaderId._id.toString();
+    const currentLeaderId = group.leader._id.toString();
     const currentUserId = userId.toString();
 
     const finalGroup = {
       ...group.toObject(),
       meLeader: currentLeaderId === currentUserId,
     };
+
+    console.log("Grupo: ", finalGroup);
 
     return res.status(200).json(finalGroup);
   } catch (err) {
