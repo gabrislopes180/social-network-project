@@ -119,11 +119,9 @@ export const getGroupById = async (req, res) => {
     const userId = req.user.id || req.user._id;
     const { groupId } = req.params;
 
-    const group = await Group.findById(groupId).populate(
-      "leader",
-      "username fullName",
-    );
-
+    const group = await Group.findById(groupId)
+      .populate("leader", "username fullName avatar")
+      .populate("members", "username fullName avatar");
     if (!group)
       return res.status(404).json({
         success: false,
@@ -135,7 +133,12 @@ export const getGroupById = async (req, res) => {
 
     const finalGroup = {
       ...group.toObject(),
-      meLeader: currentLeaderId === currentUserId,
+      meLeader: group.leader._id.toString() === userId.toString(),
+
+      members: group.members.map((member) => ({
+        ...member.toObject(),
+        isMe: member._id.toString() === userId.toString(),
+      })),
     };
 
     console.log("Grupo: ", finalGroup);
@@ -145,6 +148,76 @@ export const getGroupById = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Houve um erro ao carregar o grupo",
+      detail: err.message,
+    });
+  }
+};
+
+export const updateGroup = async (req, res) => {
+  try {
+    const userId = req.user.id || req.user._id;
+    const { groupId } = req.params;
+    const { name, description, allowMembersToPost } = req.body;
+
+    if (!name && !description && !allowMembersToPost) {
+      return res.status(400).json({
+        success: false,
+        message: "Nenhum campo foi alterado para realizer a alteração.",
+      });
+    }
+
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      return res.status(404).json({
+        success: false,
+        message: "Grupo não encontrado.",
+      });
+    }
+
+    if (group.leader.toString() !== userId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Apenas o líder do grupo pode editar os dados.",
+      });
+    }
+
+    if (name && name !== group.name) {
+      const existingGroup = await Group.findOne({
+        name,
+        _id: { $ne: groupId },
+      });
+
+      if (existingGroup) {
+        return res.status(409).json({
+          success: false,
+          message: "Já existe um grupo com esse nome.",
+        });
+      }
+    }
+
+    const updatedGroup = await Group.findByIdAndUpdate(
+      groupId,
+      {
+        name,
+        description,
+        allowMembersToPost,
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Grupo atualizado com sucesso.",
+      group: updatedGroup,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Houve um erro ao atualizar o grupo.",
       detail: err.message,
     });
   }
